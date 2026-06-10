@@ -24,11 +24,12 @@ body{
   flex-direction:column;
   opacity:0;
   transition:1s ease;
-  text-align:center;
   padding:20px;
+  text-align:center;
 }
 
 .show{opacity:1;}
+
 .photo{
   margin-top:20px;
   padding:20px;
@@ -38,11 +39,36 @@ body{
   max-width:320px;
   color:#aaa;
 }
+
+/* WORDLE */
+input{
+  padding:10px;
+  margin:10px;
+  border-radius:8px;
+  border:none;
+  text-align:center;
+}
+
+.tile{
+  display:inline-block;
+  width:40px;
+  height:40px;
+  line-height:40px;
+  margin:3px;
+  border:2px solid #444;
+  text-transform:uppercase;
+  font-weight:bold;
+}
+
+.correct{background:#3aa655;}
+.present{background:#c9b458;}
+.wrong{background:#333;}
 </style>
 </head>
 
 <body>
 
+<!-- SCENES -->
 <div id="s1" class="scene show">
   <h1>14 Years of Us ❤️</h1>
   <p>Nidhi & Deepak</p>
@@ -51,6 +77,12 @@ body{
 
 <div id="s2" class="scene">
   <h2>Surat — Where it began</h2>
+
+  <input id="winput" placeholder="5-letter word">
+  <button onclick="checkWord()">Guess</button>
+
+  <div id="grid"></div>
+  <p id="msg"></p>
 </div>
 
 <div id="s3" class="scene">
@@ -70,34 +102,64 @@ body{
 </div>
 
 <script>
-const scenes = ["s1","s2","s3","s4","s5","s6"];
-let i = 0;
 
-/* SAFE SWITCH */
+const scenes=["s1","s2","s3","s4","s5","s6"];
+let i=0;
+
 function showScene(n){
   scenes.forEach(id=>{
-    const el = document.getElementById(id);
+    const el=document.getElementById(id);
     if(el) el.classList.remove("show");
   });
 
-  const current = document.getElementById(scenes[n]);
+  const current=document.getElementById(scenes[n]);
   if(current) current.classList.add("show");
 }
 
-/* SAFE AUTO PLAY */
 function next(){
   i++;
-  if(i >= scenes.length) return;
+  if(i>=scenes.length) return;
 
   showScene(i);
-  setTimeout(next, 3500);
+  setTimeout(next,3500);
 }
 
-/* START ONLY WHEN PAGE IS READY */
-document.addEventListener("DOMContentLoaded", function(){
+document.addEventListener("DOMContentLoaded",()=>{
   showScene(0);
-  setTimeout(next, 3500);
+  setTimeout(next,3500);
 });
+
+/* WORDLE */
+const answer="SURAT";
+
+function checkWord(){
+  const val=document.getElementById("winput").value.toUpperCase();
+  const grid=document.getElementById("grid");
+
+  if(!grid) return;
+
+  grid.innerHTML="";
+
+  for(let j=0;j<5;j++){
+    const d=document.createElement("div");
+    d.className="tile";
+
+    if(val[j]===answer[j]) d.classList.add("correct");
+    else if(answer.includes(val[j])) d.classList.add("present");
+    else d.classList.add("wrong");
+
+    d.textContent=val[j]||"";
+    grid.appendChild(d);
+  }
+
+  if(val===answer){
+    document.getElementById("msg").innerText="Correct ❤️";
+    setTimeout(()=>showScene(2),1500);
+  } else {
+    document.getElementById("msg").innerText="Try again ❤️";
+  }
+}
+
 </script>
 
 </body>
