@@ -9,27 +9,36 @@
 body{
   margin:0;
   font-family:Arial;
-  background:#111;
+  background:#0f0f10;
   color:white;
   text-align:center;
 }
 
-.screen{display:none; padding:20px;}
-.active{display:block;}
+/* SCREEN SYSTEM (FIXED) */
+.screen{
+  display:none;
+  padding:20px;
+}
 
+.screen.active{
+  display:block;
+}
+
+/* BUTTON */
 button{
   padding:10px 15px;
+  margin:10px;
   border:none;
   border-radius:8px;
   background:#ff4d6d;
   color:white;
   cursor:pointer;
-  margin:10px;
 }
 
 /* WORDLE */
 .tile{
-  width:45px;height:45px;
+  width:40px;
+  height:40px;
   border:2px solid #444;
   display:inline-flex;
   align-items:center;
@@ -62,7 +71,6 @@ button{
   justify-content:center;
   margin-top:20px;
 }
-
 .cell{
   width:40px;height:40px;
   background:#222;
@@ -89,8 +97,10 @@ button{
 <!-- WORDLE -->
 <div id="wordle" class="screen">
   <h2>Wordle</h2>
+
   <input id="w" maxlength="5">
   <button onclick="checkWordle()">Guess</button>
+
   <div id="wboard"></div>
   <p id="wmsg"></p>
 </div>
@@ -105,7 +115,7 @@ button{
 <!-- STRANDS -->
 <div id="strands" class="screen">
   <h2>Strands</h2>
-  <p>Drag letters to form words</p>
+  <p>Drag letters</p>
   <div id="board"></div>
   <p id="smsg"></p>
   <button onclick="go('cross')">Next</button>
@@ -121,7 +131,7 @@ button{
   <p>Trip city</p>
   <input id="c2">
 
-  <p>Daughter</p>
+  <p>Daughter name</p>
   <input id="c3">
 
   <button onclick="checkCross()">Submit</button>
@@ -136,9 +146,11 @@ button{
 
 <script>
 
-/* NAV */
+/* NAVIGATION (FIXED) */
 function go(id){
-  document.querySelectorAll(".screen").forEach(s=>s.classList.remove("active"));
+  document.querySelectorAll(".screen").forEach(s=>{
+    s.classList.remove("active");
+  });
   document.getElementById(id).classList.add("active");
 }
 
@@ -179,11 +191,10 @@ const groups=[
 ["MEETING","WEDDING","FOREVER","ANNIVERSARY"]
 ];
 
-const words=groups.flat().sort(()=>Math.random()-0.5);
 const cgrid=document.getElementById("cgrid");
-let sel=[];
+let selected=[];
 
-words.forEach(w=>{
+groups.flat().sort(()=>Math.random()-0.5).forEach(w=>{
   const d=document.createElement("div");
   d.className="word";
   d.innerText=w;
@@ -193,31 +204,31 @@ words.forEach(w=>{
 
     d.classList.toggle("sel");
 
-    if(d.classList.contains("sel")) sel.push(d);
-    else sel=sel.filter(x=>x!==d);
+    if(d.classList.contains("sel")) selected.push(d);
+    else selected=selected.filter(x=>x!==d);
 
-    if(sel.length===4){
-      const vals=sel.map(x=>x.innerText);
+    if(selected.length===4){
+      const vals=selected.map(x=>x.innerText);
 
       const match=groups.find(g=>g.every(v=>vals.includes(v)));
 
       if(match){
-        sel.forEach(x=>{
+        selected.forEach(x=>{
           x.classList.add("done");
           x.classList.remove("sel");
         });
-      } else {
-        sel.forEach(x=>x.classList.remove("sel"));
+      }else{
+        selected.forEach(x=>x.classList.remove("sel"));
       }
 
-      sel=[];
+      selected=[];
     }
   };
 
   cgrid.appendChild(d);
 });
 
-/* STRANDS (SAFE VERSION) */
+/* STRANDS (SAFE SIMPLE VERSION) */
 const strandWords=["SURAT","VEGAS","PRISHA","LOVE"];
 const letters="SURATVEGASPRISHALOVE".split("");
 
@@ -237,31 +248,27 @@ letters.forEach(l=>{
   board.appendChild(c);
 });
 
-document.onmouseup=()=>finish();
-
-function add(c){
-  if(path.includes(c)) return;
-  c.classList.add("selCell");
-  path.push(c);
-}
-
-function finish(){
-  if(!dragging) return;
+document.onmouseup=()=>{
   dragging=false;
 
   const word=path.map(x=>x.innerText).join("");
 
   if(strandWords.includes(word)){
     path.forEach(x=>{
-      x.classList.remove("selCell");
       x.classList.add("foundCell");
     });
     document.getElementById("smsg").innerText="Found: "+word;
-  } else {
+  }else{
     path.forEach(x=>x.classList.remove("selCell"));
   }
 
   path=[];
+};
+
+function add(c){
+  if(path.includes(c)) return;
+  c.classList.add("selCell");
+  path.push(c);
 }
 
 /* CROSSWORD */
@@ -273,7 +280,7 @@ function checkCross(){
   if(a==="SURAT" && b==="VEGAS" && c==="PRISHA"){
     document.getElementById("cmsg").innerText="Perfect ❤️";
     setTimeout(()=>go("final"),1000);
-  } else {
+  }else{
     document.getElementById("cmsg").innerText="Try again ❤️";
   }
 }
