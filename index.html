@@ -1,0 +1,136 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>14 Years of Us ❤️</title>
+
+<style>
+body {
+  margin:0;
+  font-family: Arial, sans-serif;
+  background:#0f0f0f;
+  color:white;
+  text-align:center;
+}
+
+.screen { display:none; padding:20px; }
+.active { display:block; }
+
+button {
+  padding:12px 18px;
+  margin:10px;
+  border:none;
+  border-radius:8px;
+  cursor:pointer;
+}
+
+.btn { background:#ff4d6d; color:white; }
+.btn2 { background:#333; color:white; }
+
+.photo {
+  margin:15px auto;
+  padding:20px;
+  width:80%;
+  max-width:300px;
+  background:#222;
+  border-radius:12px;
+}
+</style>
+</head>
+
+<body>
+
+<!-- INTRO -->
+<div id="intro" class="screen active">
+  <h1>14 Years of Us ❤️</h1>
+  <p>Nidhi ❤️ Deepak</p>
+  <p>From Surat (April 17, 2012) to forever</p>
+
+  <div class="photo">PHOTO_01_COVER.jpg</div>
+
+  <button class="btn" onclick="playSong()">▶ Play Our Song</button>
+  <button class="btn2" onclick="show('wordle')">Start Puzzles</button>
+</div>
+
+<!-- WORDLE -->
+<div id="wordle" class="screen">
+  <h2>Puzzle 1</h2>
+  <p>Where our story began ❤️</p>
+
+  <input id="guess" placeholder="5-letter word">
+  <button class="btn" onclick="check()">Submit</button>
+  <p id="msg"></p>
+</div>
+
+<!-- CONNECTIONS -->
+<div id="connections" class="screen">
+  <h2>Puzzle 2: Connections</h2>
+  <p>SURAT • VEGAS • CHICAGO • HOME</p>
+  <p>NIDHI • DEEPAK • PRISHA • FAMILY</p>
+  <p>LOVE • TRUST • LAUGHTER • SUPPORT</p>
+  <p>MEETING • WEDDING • FOREVER • ANNIVERSARY</p>
+
+  <button class="btn" onclick="show('wordhunt')">Solved</button>
+</div>
+
+<!-- WORD HUNT -->
+<div id="wordhunt" class="screen">
+  <h2>Puzzle 3</h2>
+  <p>Our Journey ❤️</p>
+
+  <div class="photo">PHOTO_02_FAMILY.jpg</div>
+
+  <button class="btn" onclick="show('crossword')">Next</button>
+</div>
+
+<!-- CROSSWORD -->
+<div id="crossword" class="screen">
+  <h2>Puzzle 4</h2>
+  <p>SURAT • VEGAS • PRISHA</p>
+
+  <div class="photo">PHOTO_03_VEGAS.jpg</div>
+
+  <button class="btn" onclick="show('final')">Finish</button>
+</div>
+
+<!-- FINAL -->
+<div id="final" class="screen">
+  <h1>Happy 14th Anniversary ❤️</h1>
+
+  <div class="photo">PHOTO_04_BIGBOWL.jpg</div>
+
+  <p>
+    Dear Deepak,<br><br>
+    From Surat to Vegas to Chicago,<br>
+    and building a beautiful life with Prisha,<br><br>
+    every moment has been my favorite story with you.<br><br>
+    I love you ❤️
+  </p>
+
+  <div class="photo">PHOTO_05_FAMILY.jpg</div>
+</div>
+
+<script>
+function show(id){
+  document.querySelectorAll('.screen').forEach(s=>s.classList.remove('active'));
+  document.getElementById(id).classList.add('active');
+}
+
+function check(){
+  let val = document.getElementById('guess').value.toUpperCase();
+  if(val === "SURAT"){
+    document.getElementById('msg').innerText = "Correct ❤️";
+    setTimeout(()=>show('connections'),1000);
+  } else {
+    document.getElementById('msg').innerText = "Try again ❤️";
+  }
+}
+
+function playSong(){
+  window.open("PASTE_SAB_TERA_LINK_HERE","_blank");
+}
+</script>
+
+</body>
+</html>
