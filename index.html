@@ -6,36 +6,97 @@
 <title>14 Years of Us ❤️</title>
 
 <style>
-body {
+body{
   margin:0;
   font-family: Arial, sans-serif;
-  background:#0f0f0f;
+  background:#0e0e10;
   color:white;
   text-align:center;
 }
 
-.screen { display:none; padding:20px; }
-.active { display:block; }
+/* screens */
+.screen{display:none; padding:20px;}
+.active{display:block; animation:fade 0.5s ease-in;}
 
-button {
-  padding:12px 18px;
-  margin:10px;
+@keyframes fade{
+  from{opacity:0; transform:translateY(10px);}
+  to{opacity:1; transform:translateY(0);}
+}
+
+/* buttons */
+button{
+  padding:12px 16px;
+  margin:8px;
   border:none;
-  border-radius:8px;
+  border-radius:10px;
   cursor:pointer;
 }
+.btn{background:#ff4d6d; color:white;}
+.btn2{background:#333; color:white;}
 
-.btn { background:#ff4d6d; color:white; }
-.btn2 { background:#333; color:white; }
-
-.photo {
+/* photo placeholders */
+.photo{
   margin:15px auto;
-  padding:20px;
-  width:80%;
-  max-width:300px;
-  background:#222;
-  border-radius:12px;
+  padding:25px;
+  width:85%;
+  max-width:320px;
+  background:#1f1f1f;
+  border-radius:14px;
+  color:#aaa;
 }
+
+/* WORDLE GRID */
+.grid{
+  display:grid;
+  grid-template-columns: repeat(5, 45px);
+  gap:6px;
+  justify-content:center;
+  margin-top:20px;
+}
+.tile{
+  width:45px;
+  height:45px;
+  border:2px solid #444;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  text-transform:uppercase;
+  font-weight:bold;
+  background:#111;
+}
+.correct{background:#3aa655;}
+.present{background:#c9b458;}
+.wrong{background:#333;}
+
+/* CONNECTIONS */
+.word{
+  display:inline-block;
+  padding:10px 12px;
+  margin:5px;
+  background:#222;
+  border-radius:10px;
+  cursor:pointer;
+}
+.selected{background:#ff4d6d;}
+
+/* STRANDS */
+.letters{
+  display:grid;
+  grid-template-columns: repeat(6, 40px);
+  gap:5px;
+  justify-content:center;
+  margin-top:15px;
+}
+.letter{
+  width:40px;height:40px;
+  background:#222;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  cursor:pointer;
+  border-radius:6px;
+}
+.found{background:#3aa655;}
 </style>
 </head>
 
@@ -45,53 +106,74 @@ button {
 <div id="intro" class="screen active">
   <h1>14 Years of Us ❤️</h1>
   <p>Nidhi ❤️ Deepak</p>
-  <p>From Surat (April 17, 2012) to forever</p>
+  <p>From Surat → Vegas → Chicago → Forever</p>
 
-  <div class="photo">PHOTO_01_COVER.jpg</div>
+  <div class="photo">photo1.jpg</div>
 
   <button class="btn" onclick="playSong()">▶ Play Our Song</button>
-  <button class="btn2" onclick="show('wordle')">Start Puzzles</button>
+  <button class="btn2" onclick="go('wordle')">Start Journey</button>
 </div>
 
 <!-- WORDLE -->
 <div id="wordle" class="screen">
-  <h2>Puzzle 1</h2>
+  <h2>PUZZLE 1</h2>
   <p>Where our story began ❤️</p>
 
-  <input id="guess" placeholder="5-letter word">
-  <button class="btn" onclick="check()">Submit</button>
-  <p id="msg"></p>
+  <input id="winput" placeholder="Enter 5-letter word">
+  <button class="btn" onclick="checkWord()">Guess</button>
+
+  <div id="grid" class="grid"></div>
+  <p id="wmsg"></p>
 </div>
 
 <!-- CONNECTIONS -->
 <div id="connections" class="screen">
-  <h2>Puzzle 2: Connections</h2>
-  <p>SURAT • VEGAS • CHICAGO • HOME</p>
-  <p>NIDHI • DEEPAK • PRISHA • FAMILY</p>
-  <p>LOVE • TRUST • LAUGHTER • SUPPORT</p>
-  <p>MEETING • WEDDING • FOREVER • ANNIVERSARY</p>
+  <h2>PUZZLE 2: Connections</h2>
+  <p>Select related words (tap 4 at a time)</p>
 
-  <button class="btn" onclick="show('wordhunt')">Solved</button>
+  <div id="words">
+    <div class="word">SURAT</div>
+    <div class="word">VEGAS</div>
+    <div class="word">CHICAGO</div>
+    <div class="word">PRISHA</div>
+
+    <div class="word">LOVE</div>
+    <div class="word">TRUST</div>
+    <div class="word">LAUGHTER</div>
+    <div class="word">HOME</div>
+
+    <div class="word">MEETING</div>
+    <div class="word">WEDDING</div>
+    <div class="word">FOREVER</div>
+    <div class="word">ANNIVERSARY</div>
+  </div>
+
+  <button class="btn" onclick="go('strands')">Next</button>
 </div>
 
-<!-- WORD HUNT -->
-<div id="wordhunt" class="screen">
-  <h2>Puzzle 3</h2>
-  <p>Our Journey ❤️</p>
+<!-- STRANDS -->
+<div id="strands" class="screen">
+  <h2>PUZZLE 3: Our Journey</h2>
+  <p>Find hidden memories ❤️</p>
 
-  <div class="photo">PHOTO_02_FAMILY.jpg</div>
+  <div class="letters" id="letters"></div>
 
-  <button class="btn" onclick="show('crossword')">Next</button>
+  <div class="photo">photo2.jpg</div>
+
+  <button class="btn" onclick="go('crossword')">Next</button>
 </div>
 
 <!-- CROSSWORD -->
 <div id="crossword" class="screen">
-  <h2>Puzzle 4</h2>
-  <p>SURAT • VEGAS • PRISHA</p>
+  <h2>PUZZLE 4</h2>
 
-  <div class="photo">PHOTO_03_VEGAS.jpg</div>
+  <p>1. City we met: SURAT</p>
+  <p>2. Anniversary trip: VEGAS</p>
+  <p>3. Our daughter: PRISHA</p>
 
-  <button class="btn" onclick="show('final')">Finish</button>
+  <div class="photo">photo3.jpg</div>
+
+  <button class="btn" onclick="go('final')">Finish</button>
 </div>
 
 <!-- FINAL -->
@@ -102,9 +184,10 @@ button {
 
   <p>
     Dear Deepak,<br><br>
-    From Surat to Vegas to Chicago,<br>
-    and building a beautiful life with Prisha,<br><br>
-    every moment has been my favorite story with you.<br><br>
+    From Surat where it all began,<br>
+    to Vegas celebrations,<br>
+    to building a beautiful life with Prisha,<br><br>
+    every year has been my favorite story with you.<br><br>
     I love you ❤️
   </p>
 
@@ -112,24 +195,55 @@ button {
 </div>
 
 <script>
-function show(id){
+
+function go(id){
   document.querySelectorAll('.screen').forEach(s=>s.classList.remove('active'));
   document.getElementById(id).classList.add('active');
 }
 
-function check(){
-  let val = document.getElementById('guess').value.toUpperCase();
-  if(val === "SURAT"){
-    document.getElementById('msg').innerText = "Correct ❤️";
-    setTimeout(()=>show('connections'),1000);
-  } else {
-    document.getElementById('msg').innerText = "Try again ❤️";
+/* ---------- WORDLE ---------- */
+let answer = "SURAT";
+
+function checkWord(){
+  let val = document.getElementById("winput").value.toUpperCase();
+  let grid = document.getElementById("grid");
+  grid.innerHTML = "";
+
+  for(let i=0;i<5;i++){
+    let div = document.createElement("div");
+    div.classList.add("tile");
+
+    if(val[i] === answer[i]) div.classList.add("correct");
+    else if(answer.includes(val[i])) div.classList.add("present");
+    else div.classList.add("wrong");
+
+    div.innerText = val[i] || "";
+    grid.appendChild(div);
+  }
+
+  if(val === answer){
+    document.getElementById("wmsg").innerHTML = "Correct ❤️ Surat, where it all began.";
+    setTimeout(()=>go('connections'),1500);
   }
 }
 
+/* ---------- STRANDS ---------- */
+let letters = "SURATVEGASLOVEPRISHA".split("");
+
+let container = document.getElementById("letters");
+letters.forEach(l=>{
+  let d = document.createElement("div");
+  d.className="letter";
+  d.innerText=l;
+  d.onclick=()=>d.classList.toggle("found");
+  container.appendChild(d);
+});
+
+/* ---------- SONG ---------- */
 function playSong(){
-  window.open("PASTE_SAB_TERA_LINK_HERE","_blank");
+  window.open("https://www.youtube.com/watch?v=sZfnwayum2M","_blank");
 }
+
 </script>
 
 </body>
