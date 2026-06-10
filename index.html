@@ -3,33 +3,61 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Anniversary Game ❤️</title>
+<title>Our Story ❤️ Cinematic Edition</title>
 
 <style>
 body{
   margin:0;
   font-family:Arial;
-  background:#0f0f10;
+  background:#000;
   color:white;
+  overflow:hidden;
+}
+
+/* SCREEN SYSTEM */
+.screen{
+  position:absolute;
+  inset:0;
+  display:flex;
+  flex-direction:column;
+  align-items:center;
+  justify-content:center;
+  opacity:0;
+  pointer-events:none;
+  transition:opacity 1.2s ease;
+  padding:20px;
   text-align:center;
 }
 
-/* SCREEN SYSTEM (FIXED) */
-.screen{
-  display:none;
-  padding:20px;
+.screen.active{
+  opacity:1;
+  pointer-events:auto;
 }
 
-.screen.active{
-  display:block;
+/* BACKGROUND GLOW */
+.bg{
+  position:absolute;
+  inset:0;
+  background:radial-gradient(circle at center,#1a1a1a,#000);
+  z-index:-1;
+}
+
+/* TEXT */
+h1,h2,p{
+  animation:fade 1.2s ease;
+}
+
+@keyframes fade{
+  from{opacity:0; transform:translateY(10px);}
+  to{opacity:1; transform:translateY(0);}
 }
 
 /* BUTTON */
 button{
-  padding:10px 15px;
+  padding:12px 18px;
   margin:10px;
   border:none;
-  border-radius:8px;
+  border-radius:10px;
   background:#ff4d6d;
   color:white;
   cursor:pointer;
@@ -37,15 +65,13 @@ button{
 
 /* WORDLE */
 .tile{
-  width:40px;
-  height:40px;
+  width:45px;height:45px;
   border:2px solid #444;
   display:inline-flex;
   align-items:center;
   justify-content:center;
   margin:3px;
   font-weight:bold;
-  text-transform:uppercase;
 }
 .correct{background:#538d4e;}
 .present{background:#b59f3b;}
@@ -61,45 +87,56 @@ button{
   cursor:pointer;
 }
 .sel{background:#ff4d6d;}
-.done{background:#538d4e;}
+.done{background:#4caf50;}
 
 /* STRANDS */
 #board{
   display:grid;
-  grid-template-columns:repeat(6,40px);
-  gap:5px;
-  justify-content:center;
+  grid-template-columns:repeat(6,45px);
+  gap:6px;
   margin-top:20px;
 }
 .cell{
-  width:40px;height:40px;
+  width:45px;height:45px;
   background:#222;
   display:flex;
   align-items:center;
   justify-content:center;
-  border-radius:6px;
+  border-radius:8px;
   cursor:pointer;
   user-select:none;
 }
-.selCell{background:#555;}
-.foundCell{background:#538d4e;}
+.active{background:#555;}
+.found{background:#4caf50;}
+
+/* FINAL */
+.glow{
+  text-shadow:0 0 12px #ff4d6d;
+}
 </style>
 </head>
 
 <body>
 
+<audio id="music" loop>
+  <source src="sab-tera.mp3">
+</audio>
+
 <!-- INTRO -->
 <div id="intro" class="screen active">
-  <h1>❤️ Anniversary Game</h1>
-  <button onclick="go('wordle')">Start</button>
+  <div class="bg"></div>
+  <h1 class="glow">Our Story ❤️</h1>
+  <p>14 Years • One Journey • Forever</p>
+  <button onclick="start()">Begin</button>
 </div>
 
 <!-- WORDLE -->
 <div id="wordle" class="screen">
-  <h2>Wordle</h2>
+  <div class="bg"></div>
+  <h2>Chapter 1: Beginning</h2>
 
-  <input id="w" maxlength="5">
-  <button onclick="checkWordle()">Guess</button>
+  <input id="w" maxlength="5" placeholder="Guess">
+  <button onclick="checkWordle()">Submit</button>
 
   <div id="wboard"></div>
   <p id="wmsg"></p>
@@ -107,23 +144,30 @@ button{
 
 <!-- CONNECTIONS -->
 <div id="conn" class="screen">
-  <h2>Connections</h2>
+  <div class="bg"></div>
+  <h2>Chapter 2: Memories</h2>
+
   <div id="cgrid"></div>
-  <button onclick="go('strands')">Next</button>
+
+  <button onclick="go('strands')">Continue</button>
 </div>
 
 <!-- STRANDS -->
 <div id="strands" class="screen">
-  <h2>Strands</h2>
-  <p>Drag letters</p>
+  <div class="bg"></div>
+  <h2>Chapter 3: Hidden Words</h2>
+  <p>Connect letters to form memories</p>
+
   <div id="board"></div>
   <p id="smsg"></p>
-  <button onclick="go('cross')">Next</button>
+
+  <button onclick="go('cross')">Continue</button>
 </div>
 
 <!-- CROSSWORD -->
 <div id="cross" class="screen">
-  <h2>Mini Crossword</h2>
+  <div class="bg"></div>
+  <h2>Chapter 4: Final Clues</h2>
 
   <p>City we met</p>
   <input id="c1">
@@ -131,27 +175,39 @@ button{
   <p>Trip city</p>
   <input id="c2">
 
-  <p>Daughter name</p>
+  <p>Daughter</p>
   <input id="c3">
 
-  <button onclick="checkCross()">Submit</button>
+  <button onclick="checkCross()">Finish Story</button>
 
   <p id="cmsg"></p>
 </div>
 
 <!-- FINAL -->
 <div id="final" class="screen">
-  <h1>Happy Anniversary ❤️</h1>
+  <div class="bg"></div>
+
+  <h1 class="glow">Forever ❤️</h1>
+
+  <p>Surat → Vegas → Chicago → Prisha → Us</p>
+  <h2>Happy Anniversary</h2>
 </div>
 
 <script>
 
-/* NAVIGATION (FIXED) */
-function go(id){
-  document.querySelectorAll(".screen").forEach(s=>{
-    s.classList.remove("active");
-  });
+/* NAV */
+function show(id){
+  document.querySelectorAll(".screen").forEach(s=>s.classList.remove("active"));
   document.getElementById(id).classList.add("active");
+}
+
+function start(){
+  document.getElementById("music").play().catch(()=>{});
+  show("wordle");
+}
+
+function go(id){
+  show(id);
 }
 
 /* WORDLE */
@@ -179,7 +235,7 @@ function checkWordle(){
 
   if(val===answer){
     document.getElementById("wmsg").innerText="Correct ❤️";
-    setTimeout(()=>go("conn"),1000);
+    setTimeout(()=>show("conn"),1200);
   }
 }
 
@@ -192,7 +248,7 @@ const groups=[
 ];
 
 const cgrid=document.getElementById("cgrid");
-let selected=[];
+let sel=[];
 
 groups.flat().sort(()=>Math.random()-0.5).forEach(w=>{
   const d=document.createElement("div");
@@ -200,66 +256,60 @@ groups.flat().sort(()=>Math.random()-0.5).forEach(w=>{
   d.innerText=w;
 
   d.onclick=()=>{
-    if(d.classList.contains("done")) return;
-
     d.classList.toggle("sel");
 
-    if(d.classList.contains("sel")) selected.push(d);
-    else selected=selected.filter(x=>x!==d);
+    if(d.classList.contains("sel")) sel.push(d);
+    else sel=sel.filter(x=>x!==d);
 
-    if(selected.length===4){
-      const vals=selected.map(x=>x.innerText);
-
+    if(sel.length===4){
+      const vals=sel.map(x=>x.innerText);
       const match=groups.find(g=>g.every(v=>vals.includes(v)));
 
       if(match){
-        selected.forEach(x=>{
+        sel.forEach(x=>{
           x.classList.add("done");
           x.classList.remove("sel");
         });
-      }else{
-        selected.forEach(x=>x.classList.remove("sel"));
+      } else {
+        sel.forEach(x=>x.classList.remove("sel"));
       }
 
-      selected=[];
+      sel=[];
     }
   };
 
   cgrid.appendChild(d);
 });
 
-/* STRANDS (SAFE SIMPLE VERSION) */
+/* STRANDS (SAFE CINEMATIC VERSION) */
 const strandWords=["SURAT","VEGAS","PRISHA","LOVE"];
 const letters="SURATVEGASPRISHALOVE".split("");
 
 const board=document.getElementById("board");
-
 let path=[];
-let dragging=false;
+let drag=false;
 
 letters.forEach(l=>{
   const c=document.createElement("div");
   c.className="cell";
   c.innerText=l;
 
-  c.onmousedown=()=>{dragging=true; add(c);}
-  c.onmouseover=()=>{if(dragging) add(c);}
+  c.onmousedown=()=>{drag=true; add(c);}
+  c.onmouseover=()=>{if(drag) add(c);}
 
   board.appendChild(c);
 });
 
 document.onmouseup=()=>{
-  dragging=false;
+  drag=false;
 
   const word=path.map(x=>x.innerText).join("");
 
   if(strandWords.includes(word)){
-    path.forEach(x=>{
-      x.classList.add("foundCell");
-    });
-    document.getElementById("smsg").innerText="Found: "+word;
-  }else{
-    path.forEach(x=>x.classList.remove("selCell"));
+    path.forEach(x=>x.classList.add("found"));
+    document.getElementById("smsg").innerText="Found: "+word+" ❤️";
+  } else {
+    path.forEach(x=>x.classList.remove("active"));
   }
 
   path=[];
@@ -267,7 +317,7 @@ document.onmouseup=()=>{
 
 function add(c){
   if(path.includes(c)) return;
-  c.classList.add("selCell");
+  c.classList.add("active");
   path.push(c);
 }
 
@@ -279,8 +329,8 @@ function checkCross(){
 
   if(a==="SURAT" && b==="VEGAS" && c==="PRISHA"){
     document.getElementById("cmsg").innerText="Perfect ❤️";
-    setTimeout(()=>go("final"),1000);
-  }else{
+    setTimeout(()=>show("final"),1500);
+  } else {
     document.getElementById("cmsg").innerText="Try again ❤️";
   }
 }
