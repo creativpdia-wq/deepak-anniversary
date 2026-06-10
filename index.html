@@ -3,9 +3,8 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-<title>14 Years of Us ❤️ Cinematic Movie</title>
+<title>14 Years of Us ❤️</title>
 
-  
 <style>
 body{
   margin:0;
@@ -16,7 +15,7 @@ body{
   overflow:hidden;
 }
 
-/* SCENES */
+/* scenes */
 .scene{
   position:absolute;
   width:100%;
@@ -26,282 +25,93 @@ body{
   justify-content:center;
   align-items:center;
   opacity:0;
-  transform:scale(1.05);
-  transition:all 1.5s ease;
+  transition:1.2s ease;
   padding:20px;
 }
 
-.show{
-  opacity:1;
-  transform:scale(1);
-  z-index:2;
-}
-
-.hide{
-  opacity:0;
-  transform:scale(0.98);
-  z-index:1;
-}
-
-/* TEXT */
-h1,h2,p{
-  margin:10px;
-}
+.show{opacity:1; z-index:2;}
+.hide{opacity:0; z-index:1;}
 
 .photo{
   margin:20px;
   padding:25px;
   width:80%;
-  max-width:350px;
+  max-width:340px;
   background:#1f1f1f;
   border-radius:12px;
   color:#aaa;
-}
-
-/* WORDLE STYLE */
-.grid{
-  display:grid;
-  grid-template-columns: repeat(5, 45px);
-  gap:6px;
-  justify-content:center;
-  margin-top:15px;
-}
-
-.tile{
-  width:45px;height:45px;
-  border:2px solid #444;
-  display:flex;
-  align-items:center;
-  justify-content:center;
-  font-weight:bold;
-  background:#111;
-}
-
-.correct{background:#3aa655;}
-.present{background:#c9b458;}
-.wrong{background:#333;}
-
-/* CONNECTIONS */
-.word{
-  display:inline-block;
-  padding:10px;
-  margin:5px;
-  background:#222;
-  border-radius:8px;
-}
-
-.word.sel{background:#ff4d6d;}
-.word.ok{background:#3aa655;}
-
-/* INPUT */
-input{
-  padding:10px;
-  margin:8px;
-  border-radius:8px;
-  border:none;
-  text-align:center;
 }
 </style>
 </head>
 
 <body>
 
-<!-- SCENE 1 -->
 <div id="s1" class="scene show">
   <h1>14 Years of Us ❤️</h1>
   <p>Nidhi & Deepak</p>
-  <div class="photo">PHOTO_01_COVER</div>
+  <div class="photo">PHOTO_01</div>
   <p>Loading memories...</p>
 </div>
 
-<!-- SCENE 2 WORDLE -->
 <div id="s2" class="scene">
-  <h2>Puzzle 1</h2>
-  <p>Where it all began...</p>
-
-  <input id="winput" placeholder="5-letter word"/>
-  <button onclick="checkWord()">Try</button>
-
-  <div id="grid" class="grid"></div>
-  <p id="wmsg"></p>
+  <h2>Surat — Where it began</h2>
 </div>
 
-<!-- SCENE 3 CONNECTIONS -->
 <div id="s3" class="scene">
-  <h2>Puzzle 2</h2>
-  <p>Connections of our life ❤️</p>
-
-  <div id="words"></div>
-  <p id="cmsg"></p>
+  <h2>Vegas — Our celebration</h2>
 </div>
 
-<!-- SCENE 4 WORD HUNT -->
 <div id="s4" class="scene">
-  <h2>Puzzle 3</h2>
-  <p>Tap memories in order ❤️</p>
-
-  <div id="letters"></div>
-  <p id="smsg"></p>
-  <div class="photo">PHOTO_02_FAMILY</div>
+  <h2>Chicago — Memories built</h2>
 </div>
 
-<!-- SCENE 5 CROSSWORD -->
 <div id="s5" class="scene">
-  <h2>Puzzle 4</h2>
-
-  <p>City we met</p>
-  <input id="c1"/>
-
-  <p>Trip city</p>
-  <input id="c2"/>
-
-  <p>Daughter</p>
-  <input id="c3"/>
-
-  <button onclick="checkCrossword()">Check</button>
-  <p id="cwmsg"></p>
+  <h2>Prisha — Our world ❤️</h2>
 </div>
 
-<!-- FINAL -->
 <div id="s6" class="scene">
-  <h1>Happy 14th Anniversary ❤️</h1>
-  <div class="photo">PHOTO_03_BIGBOWL</div>
-  <p>
-    From Surat → Vegas → Chicago → Prisha → Forever ❤️
-  </p>
+  <h1>Happy Anniversary ❤️</h1>
+  <div class="photo">FINAL PHOTO</div>
 </div>
 
 <script>
 
-let scenes=["s1","s2","s3","s4","s5","s6"];
-let i=0;
+const scenes = ["s1","s2","s3","s4","s5","s6"];
+let index = 0;
 
-/* AUTO PLAY ENGINE */
-function showScene(n){
+/* SAFE SCENE SWITCH */
+function show(i){
   scenes.forEach(id=>{
-    document.getElementById(id).classList.remove("show");
-    document.getElementById(id).classList.add("hide");
+    const el = document.getElementById(id);
+    if(el){
+      el.classList.remove("show");
+      el.classList.add("hide");
+    }
   });
 
-  document.getElementById(scenes[n]).classList.add("show");
+  const current = document.getElementById(scenes[i]);
+  if(current){
+    current.classList.add("show");
+  }
 }
 
-/* AUTO FLOW */
+/* SAFE AUTO RUN */
 function next(){
-  i++;
-  if(i<scenes.length){
-    showScene(i);
-    setTimeout(next, 7000); // slow cinematic pacing
+  index++;
+
+  if(index >= scenes.length){
+    return; // stop safely (prevents blank crash)
   }
+
+  show(index);
+  setTimeout(next, 4000); // slow cinematic pacing
 }
 
-/* START AUTO MOVIE */
-setTimeout(next, 4000);
-
-/* WORDLE */
-const answer="SURAT";
-
-function checkWord(){
-  let val=document.getElementById("winput").value.toUpperCase();
-  let grid=document.getElementById("grid");
-  grid.innerHTML="";
-
-  for(let i=0;i<5;i++){
-    let d=document.createElement("div");
-    d.className="tile";
-
-    if(val[i]===answer[i]) d.classList.add("correct");
-    else if(answer.includes(val[i])) d.classList.add("present");
-    else d.classList.add("wrong");
-
-    d.innerText=val[i]||"";
-    grid.appendChild(d);
-  }
-
-  if(val===answer){
-    document.getElementById("wmsg").innerText="Correct ❤️";
-    setTimeout(()=>showScene(2),2000);
-  }
-}
-
-/* CONNECTIONS */
-const groups=[
-  ["SURAT","VEGAS","CHICAGO","HOME"],
-  ["NIDHI","DEEPAK","PRISHA","FAMILY"],
-  ["LOVE","TRUST","LAUGHTER","SUPPORT"],
-  ["MEETING","WEDDING","FOREVER","ANNIVERSARY"]
-];
-
-let container=document.getElementById("words");
-let words=groups.flat().sort(()=>Math.random()-0.5);
-let sel=[];
-
-words.forEach(w=>{
-  let d=document.createElement("div");
-  d.className="word";
-  d.innerText=w;
-
-  d.onclick=()=>{
-    d.classList.toggle("sel");
-    if(d.classList.contains("sel")) sel.push(d);
-    else sel=sel.filter(x=>x!==d);
-
-    if(sel.length===4){
-      let vals=sel.map(x=>x.innerText);
-      let match=groups.find(g=>g.every(v=>vals.includes(v)));
-
-      if(match){
-        sel.forEach(x=>x.classList.add("ok"));
-      } else {
-        sel.forEach(x=>x.classList.remove("sel"));
-      }
-
-      sel=[];
-
-      if(document.querySelectorAll(".ok").length>=16){
-        setTimeout(()=>showScene(3),2000);
-      }
-    }
-  };
-
-  container.appendChild(d);
-});
-
-/* WORD HUNT */
-let letters="SURATVEGASPRISHALOVE".split("");
-let box=document.getElementById("letters");
-let target=["SURAT","VEGAS","PRISHA","LOVE"];
-let cur="";
-
-letters.forEach(l=>{
-  let d=document.createElement("div");
-  d.className="word";
-  d.innerText=l;
-
-  d.onclick=()=>{
-    cur+=l;
-    if(target.includes(cur)){
-      document.getElementById("smsg").innerText="Found "+cur+" ❤️";
-      cur="";
-    }
-  };
-
-  box.appendChild(d);
-});
-
-/* CROSSWORD */
-function checkCrossword(){
-  let a1=document.getElementById("c1").value.toUpperCase();
-  let a2=document.getElementById("c2").value.toUpperCase();
-  let a3=document.getElementById("c3").value.toUpperCase();
-
-  if(a1==="SURAT" && a2==="VEGAS" && a3==="PRISHA"){
-    document.getElementById("cwmsg").innerText="Perfect ❤️";
-    setTimeout(()=>showScene(5),2000);
-  } else {
-    document.getElementById("cwmsg").innerText="Try again ❤️";
-  }
-}
+/* START ONLY AFTER PAGE LOAD */
+window.onload = function(){
+  show(0);
+  setTimeout(next, 4000);
+};
 
 </script>
 
