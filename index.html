@@ -1,44 +1,41 @@
 <!DOCTYPE html>
-<html lang="en">
+<html>
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-<title>14 Years of Us ❤️</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Anniversary Film ❤️</title>
 
 <style>
 body{
   margin:0;
-  font-family: Arial;
   background:#0e0e10;
   color:white;
-  text-align:center;
+  font-family:Arial;
   overflow:hidden;
 }
 
-/* scenes */
 .scene{
   position:absolute;
   width:100%;
   height:100%;
   display:flex;
-  flex-direction:column;
   justify-content:center;
   align-items:center;
+  flex-direction:column;
   opacity:0;
-  transition:1.2s ease;
+  transition:1s ease;
+  text-align:center;
   padding:20px;
 }
 
-.show{opacity:1; z-index:2;}
-.hide{opacity:0; z-index:1;}
-
+.show{opacity:1;}
 .photo{
-  margin:20px;
-  padding:25px;
-  width:80%;
-  max-width:340px;
+  margin-top:20px;
+  padding:20px;
   background:#1f1f1f;
   border-radius:12px;
+  width:80%;
+  max-width:320px;
   color:#aaa;
 }
 </style>
@@ -49,8 +46,7 @@ body{
 <div id="s1" class="scene show">
   <h1>14 Years of Us ❤️</h1>
   <p>Nidhi & Deepak</p>
-  <div class="photo">PHOTO_01</div>
-  <p>Loading memories...</p>
+  <div class="photo">Opening Memory</div>
 </div>
 
 <div id="s2" class="scene">
@@ -58,11 +54,11 @@ body{
 </div>
 
 <div id="s3" class="scene">
-  <h2>Vegas — Our celebration</h2>
+  <h2>Vegas — Memories</h2>
 </div>
 
 <div id="s4" class="scene">
-  <h2>Chicago — Memories built</h2>
+  <h2>Chicago — Journey</h2>
 </div>
 
 <div id="s5" class="scene">
@@ -71,48 +67,37 @@ body{
 
 <div id="s6" class="scene">
   <h1>Happy Anniversary ❤️</h1>
-  <div class="photo">FINAL PHOTO</div>
 </div>
 
 <script>
-
 const scenes = ["s1","s2","s3","s4","s5","s6"];
-let index = 0;
+let i = 0;
 
-/* SAFE SCENE SWITCH */
-function show(i){
+/* SAFE SWITCH */
+function showScene(n){
   scenes.forEach(id=>{
     const el = document.getElementById(id);
-    if(el){
-      el.classList.remove("show");
-      el.classList.add("hide");
-    }
+    if(el) el.classList.remove("show");
   });
 
-  const current = document.getElementById(scenes[i]);
-  if(current){
-    current.classList.add("show");
-  }
+  const current = document.getElementById(scenes[n]);
+  if(current) current.classList.add("show");
 }
 
-/* SAFE AUTO RUN */
+/* SAFE AUTO PLAY */
 function next(){
-  index++;
+  i++;
+  if(i >= scenes.length) return;
 
-  if(index >= scenes.length){
-    return; // stop safely (prevents blank crash)
-  }
-
-  show(index);
-  setTimeout(next, 4000); // slow cinematic pacing
+  showScene(i);
+  setTimeout(next, 3500);
 }
 
-/* START ONLY AFTER PAGE LOAD */
-window.onload = function(){
-  show(0);
-  setTimeout(next, 4000);
-};
-
+/* START ONLY WHEN PAGE IS READY */
+document.addEventListener("DOMContentLoaded", function(){
+  showScene(0);
+  setTimeout(next, 3500);
+});
 </script>
 
 </body>
