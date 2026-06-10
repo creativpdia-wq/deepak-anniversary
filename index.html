@@ -179,6 +179,7 @@ img{
   <input id="c1" placeholder="City we met"><br>
   <input id="c2" placeholder="Trip city"><br>
   <input id="c3" placeholder="Daughter">
+  <input id="c4" placeholder="Favorite Restaurant">
 
   <button onclick="checkCross()">Finish</button>
   <p id="cmsg"></p>
@@ -334,8 +335,9 @@ function checkCross(){
   const a=document.getElementById("c1").value.toUpperCase();
   const b=document.getElementById("c2").value.toUpperCase();
   const c=document.getElementById("c3").value.toUpperCase();
+  const d=document.getElementById("c4").value.toUpperCase();
 
-  if(a==="SURAT" && b==="VEGAS" && c==="PRISHA"){
+  if(a==="SURAT" && b==="VEGAS" && c==="PRISHA" && d==="Big Bowl"){
     document.getElementById("cmsg").innerText="Perfect ❤️";
     setTimeout(()=>show("final"),1200);
   } else {
