@@ -8,92 +8,73 @@
 <style>
 body{
   margin:0;
-  font-family: Arial, sans-serif;
+  font-family: Arial;
   background:#0e0e10;
-  color: white;
-  text-align: center;
+  color:white;
+  text-align:center;
 }
 
-/* screens */
 .screen{display:none; padding:20px;}
-.active{display:block; animation:fade 0.5s ease-in;}
+.active{display:block;}
 
-@keyframes fade{
-  from{opacity:0; transform:translateY(10px);}
-  to{opacity:1; transform:translateY(0);}
-}
-
-/* buttons */
 button{
   padding:12px 16px;
   margin:8px;
-  border: none;
+  border:none;
   border-radius:10px;
-  cursor: pointer;
+  cursor:pointer;
 }
+
 .btn{background:#ff4d6d; color:white;}
 .btn2{background:#333; color:white;}
 
-/* photo placeholders */
 .photo{
   margin:15px auto;
-  padding:25px;
+  padding:20px;
   width:85%;
   max-width:320px;
   background:#1f1f1f;
-  border-radius:14px;
+  border-radius:12px;
   color:#aaa;
 }
 
-/* WORDLE GRID */
+/* WORDLE */
 .grid{
   display:grid;
   grid-template-columns: repeat(5, 45px);
   gap:6px;
   justify-content:center;
-  margin-top:20px;
+  margin-top:15px;
 }
+
 .tile{
-  width:45px;
-  height:45px;
-  border:2px solid #444;
+  width:45px;height:45px;
   display:flex;
   align-items:center;
   justify-content:center;
+  border:2px solid #444;
   text-transform:uppercase;
   font-weight:bold;
   background:#111;
 }
+
 .correct{background:#3aa655;}
 .present{background:#c9b458;}
 .wrong{background:#333;}
 
 /* CONNECTIONS */
-/*.word{
-  display:inline-block;
-  padding:10px 12px;
-  margin:5px;
-  background:#222;
-  border-radius:10px;
-  cursor:pointer;
-}
-.selected{background:#ff4d6d;}*/
 .word{
   display:inline-block;
-  padding:10px 12px;
-  margin:6px;
+  padding:10px;
+  margin:5px;
   background:#222;
-  border-radius:10px;
+  border-radius:8px;
   cursor:pointer;
   user-select:none;
 }
-.word.selected{
-  background:#ff4d6d;
-}
-.word.correct{
-  background:#3aa655;
-}
 
+.word.selected{background:#ff4d6d;}
+.word.correct{background:#3aa655;}
 
 /* STRANDS */
 .letters{
@@ -101,17 +82,19 @@ button{
   grid-template-columns: repeat(6, 40px);
   gap:5px;
   justify-content:center;
-  margin-top:15px;
+  margin-top:10px;
 }
+
 .letter{
   width:40px;height:40px;
   background:#222;
   display:flex;
   align-items:center;
   justify-content:center;
-  cursor:pointer;
   border-radius:6px;
+  cursor:pointer;
 }
+
 .found{background:#3aa655;}
 </style>
 </head>
@@ -122,20 +105,19 @@ button{
 <div id="intro" class="screen active">
   <h1>14 Years of Us ❤️</h1>
   <p>Nidhi ❤️ Deepak</p>
-  <p>From Surat → Vegas → Chicago → Forever</p>
+  <p>Surat → Vegas → Chicago → Prisha → Forever</p>
 
- <div class="photo">photo1.jpg</div>
+  <div class="photo">PHOTO_01_COVER.jpg</div>
 
   <button class="btn" onclick="playSong()">▶ Play Our Song</button>
-  <button class="btn2" onclick="go('wordle')">Start Journey</button>
+  <button class="btn2" onclick="go('wordle')">Start</button>
 </div>
 
 <!-- WORDLE -->
 <div id="wordle" class="screen">
-  <h2>PUZZLE 1</h2>
-  <p>Where our story began ❤️</p>
+  <h2>Puzzle 1: Where it began</h2>
 
-  <input id="winput" placeholder="Enter 5-letter word">
+  <input id="winput" placeholder="5-letter word">
   <button class="btn" onclick="checkWord()">Guess</button>
 
   <div id="grid" class="grid"></div>
@@ -145,55 +127,32 @@ button{
 <!-- CONNECTIONS -->
 <div id="connections" class="screen">
   <h2>Puzzle 2: Connections</h2>
-  <p>Select 4 words from the same group</p>
+  <p>Select groups of 4</p>
 
-  
-<!-- CONNECTIONS 
-<div id="connections" class="screen">
-  <h2>PUZZLE 2: Connections</h2>
-  <p>Select related words (tap 4 at a time)</p>-->
-
-  <div id="words">
-    <div class="word">SURAT</div>
-    <div class="word">VEGAS</div>
-    <div class="word">CHICAGO</div>
-    <div class="word">PRISHA</div>
-
-    <div class="word">LOVE</div>
-    <div class="word">TRUST</div>
-    <div class="word">LAUGHTER</div>
-    <div class="word">HOME</div>
-
-    <div class="word">MEETING</div>
-    <div class="word">WEDDING</div>
-    <div class="word">FOREVER</div>
-    <div class="word">ANNIVERSARY</div>
-  </div>
+  <div id="words"></div>
+  <p id="cmsg"></p>
 
   <button class="btn" onclick="go('strands')">Next</button>
 </div>
 
 <!-- STRANDS -->
 <div id="strands" class="screen">
-  <h2>PUZZLE 3: Our Journey</h2>
-  <p>Find hidden memories ❤️</p>
+  <h2>Puzzle 3: Our Journey</h2>
 
   <div class="letters" id="letters"></div>
 
-  <div class="photo">photo2.jpg</div>
+  <div class="photo">PHOTO_02_FAMILY.jpg</div>
 
   <button class="btn" onclick="go('crossword')">Next</button>
 </div>
 
 <!-- CROSSWORD -->
 <div id="crossword" class="screen">
-  <h2>PUZZLE 4</h2>
+  <h2>Puzzle 4</h2>
 
-  <p>1. City we met: SURAT</p>
-  <p>2. Anniversary trip: VEGAS</p>
-  <p>3. Our daughter: PRISHA</p>
+  <p>Surat • Vegas • Prisha</p>
 
-  <div class="photo">photo3.jpg</div>
+  <div class="photo">PHOTO_03_VEGAS.jpg</div>
 
   <button class="btn" onclick="go('final')">Finish</button>
 </div>
@@ -206,11 +165,9 @@ button{
 
   <p>
     Dear Deepak,<br><br>
-    From Surat where it all began,<br>
-    to Vegas celebrations,<br>
-    to building a beautiful life with Prisha,<br><br>
-    every year has been my favorite story with you.<br><br>
-    I love you ❤️
+    From Surat to Vegas to Chicago,<br>
+    and building a life with Prisha,<br><br>
+    every year has been beautiful with you ❤️
   </p>
 
   <div class="photo">PHOTO_05_FAMILY.jpg</div>
@@ -218,73 +175,63 @@ button{
 
 <script>
 
+/* NAV */
 function go(id){
   document.querySelectorAll('.screen').forEach(s=>s.classList.remove('active'));
   document.getElementById(id).classList.add('active');
 }
 
-/* ---------- WORDLE ---------- */
-let answer = "SURAT";
+/* SONG */
+function playSong(){
+  window.open("PASTE_SAB_TERA_LINK_HERE","_blank");
+}
+
+/* WORDLE */
+const answer="SURAT";
 
 function checkWord(){
-  let val = document.getElementById("winput").value.toUpperCase();
-  let grid = document.getElementById("grid");
-  grid.innerHTML = "";
+  let val=document.getElementById("winput").value.toUpperCase();
+  let grid=document.getElementById("grid");
+  let msg=document.getElementById("wmsg");
+
+  grid.innerHTML="";
 
   for(let i=0;i<5;i++){
-    let div = document.createElement("div");
-    div.classList.add("tile");
+    let d=document.createElement("div");
+    d.className="tile";
 
-    if(val[i] === answer[i]) div.classList.add("correct");
-    else if(answer.includes(val[i])) div.classList.add("present");
-    else div.classList.add("wrong");
+    if(val[i]==answer[i]) d.classList.add("correct");
+    else if(answer.includes(val[i])) d.classList.add("present");
+    else d.classList.add("wrong");
 
-    div.innerText = val[i] || "";
-    grid.appendChild(div);
+    d.innerText=val[i]||"";
+    grid.appendChild(d);
   }
 
-  if(val === answer){
-    document.getElementById("wmsg").innerHTML = "Correct ❤️ Surat, where it all began.";
-    setTimeout(()=>go('connections'),1500);
+  if(val===answer){
+    msg.innerText="Correct ❤️";
+    setTimeout(()=>go('connections'),1200);
+  } else {
+    msg.innerText="Try again ❤️";
   }
 }
 
-/* ---------- STRANDS ---------- */
-let letters = "SURATVEGASLOVEPRISHA".split("");
-
-let container = document.getElementById("letters");
-letters.forEach(l=>{
-  let d = document.createElement("div");
-  d.className="letter";
-  d.innerText=l;
-  d.onclick=()=>d.classList.toggle("found");
-  container.appendChild(d);
-});
-
-/* ---------- SONG ---------- */
-function playSong(){
-  window.open("https://www.youtube.com/watch?v=sZfnwayum2M","_blank");
-}
-
-const groups = [
+/* CONNECTIONS */
+const groups=[
   ["SURAT","VEGAS","CHICAGO","HOME"],
   ["NIDHI","DEEPAK","PRISHA","FAMILY"],
   ["LOVE","TRUST","LAUGHTER","SUPPORT"],
   ["MEETING","WEDDING","FOREVER","ANNIVERSARY"]
 ];
 
-let selected = [];
-let solvedGroups = 0;
+let selected=[];
+let solved=0;
 
-const words = [].concat(...groups);
-const container = document.getElementById("words");
+let container=document.getElementById("words");
+let words=groups.flat().sort(()=>Math.random()-0.5);
 
-// shuffle words
-words.sort(() => Math.random() - 0.5);
-
-// render
 words.forEach(w=>{
-  let d = document.createElement("div");
+  let d=document.createElement("div");
   d.className="word";
   d.innerText=w;
 
@@ -296,10 +243,10 @@ words.forEach(w=>{
     if(d.classList.contains("selected")){
       selected.push(d);
     } else {
-      selected = selected.filter(x => x !== d);
+      selected=selected.filter(x=>x!==d);
     }
 
-    if(selected.length === 4){
+    if(selected.length===4){
       checkGroup();
     }
   };
@@ -308,32 +255,40 @@ words.forEach(w=>{
 });
 
 function checkGroup(){
-  let values = selected.map(x=>x.innerText);
+  let vals=selected.map(x=>x.innerText);
 
-  let match = groups.find(g =>
-    g.every(v => values.includes(v))
-  );
+  let match=groups.find(g=>g.every(v=>vals.includes(v)));
 
   if(match){
     selected.forEach(x=>{
       x.classList.remove("selected");
       x.classList.add("correct");
     });
-
-    document.getElementById("connMsg").innerText = "Correct ❤️ Group found!";
-    solvedGroups++;
+    solved++;
   } else {
-    document.getElementById("connMsg").innerText = "Try again ❤️";
     selected.forEach(x=>x.classList.remove("selected"));
   }
 
-  selected = [];
+  selected=[];
 
-  if(solvedGroups === 4){
-    document.getElementById("connMsg").innerText =
-      "All connections found ❤️";
+  if(solved===4){
+    document.getElementById("cmsg").innerText="All solved ❤️";
   }
 }
+
+/* STRANDS */
+let letters="SURATVEGASPRISHALOVE".split("");
+let lbox=document.getElementById("letters");
+
+letters.forEach(l=>{
+  let d=document.createElement("div");
+  d.className="letter";
+  d.innerText=l;
+
+  d.onclick=()=>d.classList.toggle("found");
+
+  lbox.appendChild(d);
+});
 
 </script>
 
