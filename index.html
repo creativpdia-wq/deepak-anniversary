@@ -3,430 +3,279 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>14 Years of Us ❤️</title>
+<title>Anniversary Game ❤️</title>
 
 <style>
 body{
   margin:0;
   font-family:Arial;
-  background:#0e0e10;
+  background:#111;
   color:white;
   text-align:center;
 }
 
-.screen{
-  display:none;
-  min-height:100vh;
-  padding:20px;
-}
-
-.active{
-  display:flex;
-  flex-direction:column;
-  align-items:center;
-  justify-content:center;
-}
+.screen{display:none; padding:20px;}
+.active{display:block;}
 
 button{
-  padding:12px 18px;
-  margin:10px;
+  padding:10px 15px;
   border:none;
-  border-radius:10px;
-  cursor:pointer;
+  border-radius:8px;
   background:#ff4d6d;
   color:white;
-}
-
-/* SLIDESHOW */
-img{
-  width:300px;
-  max-width:90%;
-  border-radius:15px;
-  margin:15px;
+  cursor:pointer;
+  margin:10px;
 }
 
 /* WORDLE */
-.row{
-  display:flex;
-  justify-content:center;
-}
-
 .tile{
-  width:50px;
-  height:50px;
-  border:2px solid #3a3a3c;
-  display:flex;
+  width:45px;height:45px;
+  border:2px solid #444;
+  display:inline-flex;
   align-items:center;
   justify-content:center;
-  font-size:22px;
-  font-weight:bold;
   margin:3px;
+  font-weight:bold;
   text-transform:uppercase;
 }
-
 .correct{background:#538d4e;}
 .present{background:#b59f3b;}
-.absent{background:#3a3a3c;}
+.absent{background:#333;}
 
 /* CONNECTIONS */
-.grid{
-  display:grid;
-  grid-template-columns:repeat(4,1fr);
-  gap:10px;
-  max-width:500px;
-}
-
 .word{
-  background:#222;
+  display:inline-block;
   padding:10px;
+  margin:5px;
+  background:#222;
   border-radius:8px;
   cursor:pointer;
-  user-select:none;
 }
-
 .sel{background:#ff4d6d;}
 .done{background:#538d4e;}
 
 /* STRANDS */
 #board{
   display:grid;
-  grid-template-columns:repeat(6,45px);
-  gap:6px;
+  grid-template-columns:repeat(6,40px);
+  gap:5px;
   justify-content:center;
-  margin:20px auto;
+  margin-top:20px;
 }
 
 .cell{
-  width:45px;
-  height:45px;
+  width:40px;height:40px;
   background:#222;
   display:flex;
   align-items:center;
   justify-content:center;
-  border-radius:8px;
-  user-select:none;
+  border-radius:6px;
   cursor:pointer;
+  user-select:none;
 }
-
-.activeCell{background:#444;}
+.selCell{background:#555;}
 .foundCell{background:#538d4e;}
-
-/* CROSSWORD */
-.cw{
-  text-align:left;
-  max-width:300px;
-  margin:auto;
-}
-
-input{
-  padding:10px;
-  margin:5px;
-  border-radius:8px;
-  border:none;
-  text-align:center;
-  text-transform:uppercase;
-}
 </style>
 </head>
 
 <body>
 
-<audio id="music" loop>
-  <source src="sab-tera.mp3">
-</audio>
-
 <!-- INTRO -->
 <div id="intro" class="screen active">
-  <h1>14 Years of Us ❤️</h1>
-
-  <img id="slide" src="photo1.jpg">
-
-  <p>Nidhi ❤️ Deepak</p>
-
-  <button onclick="start()">Start Our Story ❤️</button>
+  <h1>❤️ Anniversary Game</h1>
+  <button onclick="go('wordle')">Start</button>
 </div>
 
 <!-- WORDLE -->
 <div id="wordle" class="screen">
-  <h2>Wordle ❤️</h2>
-
-  <input id="w" maxlength="5" placeholder="5 letters">
+  <h2>Wordle</h2>
+  <input id="w" maxlength="5">
   <button onclick="checkWordle()">Guess</button>
-
-  <div id="boardW"></div>
-  <p id="wm"></p>
+  <div id="wboard"></div>
+  <p id="wmsg"></p>
 </div>
 
 <!-- CONNECTIONS -->
 <div id="conn" class="screen">
-  <h2>Connections ❤️</h2>
-
-  <div id="gridC" class="grid"></div>
-
+  <h2>Connections</h2>
+  <div id="cgrid"></div>
   <button onclick="go('strands')">Next</button>
 </div>
 
 <!-- STRANDS -->
 <div id="strands" class="screen">
-  <h2>Strands ❤️</h2>
-  <p>Drag to connect letters</p>
-
+  <h2>Strands</h2>
+  <p>Drag letters to form words</p>
   <div id="board"></div>
-
-  <p id="sm"></p>
-
+  <p id="smsg"></p>
   <button onclick="go('cross')">Next</button>
 </div>
 
 <!-- CROSSWORD -->
 <div id="cross" class="screen">
-  <h2>Mini Crossword ❤️</h2>
+  <h2>Mini Crossword</h2>
 
-  <div class="cw">
-    <p>1. City we met</p>
-    <input id="c1">
+  <p>City we met</p>
+  <input id="c1">
 
-    <p>2. Anniversary trip city</p>
-    <input id="c2">
+  <p>Trip city</p>
+  <input id="c2">
 
-    <p>3. Our daughter</p>
-    <input id="c3">
-
-    <p>4. Restaurant</p>
-    <input id="c4">
-  </div>
+  <p>Daughter</p>
+  <input id="c3">
 
   <button onclick="checkCross()">Submit</button>
 
-  <p id="cwmsg"></p>
+  <p id="cmsg"></p>
 </div>
 
 <!-- FINAL -->
 <div id="final" class="screen">
   <h1>Happy Anniversary ❤️</h1>
-
-  <img src="photo5.jpg">
-
-  <p>From Surat → Vegas → Chicago → Prisha → Forever ❤️</p>
 </div>
 
 <script>
 
 /* NAV */
 function go(id){
-  document.querySelectorAll(".screen")
-  .forEach(s=>s.classList.remove("active"));
+  document.querySelectorAll(".screen").forEach(s=>s.classList.remove("active"));
   document.getElementById(id).classList.add("active");
 }
-
-/* START */
-function start(){
-  document.getElementById("music").play().catch(()=>{});
-  go("wordle");
-}
-
-/* SLIDESHOW */
-let i=0;
-const pics=["photo1.jpg","photo2.jpg","photo3.jpg","photo4.jpg","photo5.jpg"];
-
-setInterval(()=>{
-  i=(i+1)%pics.length;
-  document.getElementById("slide").src=pics[i];
-},2500);
 
 /* WORDLE */
 const answer="APRIL";
 
 function checkWordle(){
+  const val=document.getElementById("w").value.toUpperCase();
+  const board=document.getElementById("wboard");
 
-const val=document.getElementById("w").value.toUpperCase();
-const board=document.getElementById("boardW");
+  const row=document.createElement("div");
 
-const r=document.createElement("div");
-r.className="row";
+  for(let i=0;i<5;i++){
+    const d=document.createElement("span");
+    d.className="tile";
 
-for(let i=0;i<5;i++){
-const d=document.createElement("div");
-d.className="tile";
+    if(val[i]===answer[i]) d.classList.add("correct");
+    else if(answer.includes(val[i])) d.classList.add("present");
+    else d.classList.add("absent");
 
-if(val[i]===answer[i]) d.classList.add("correct");
-else if(answer.includes(val[i])) d.classList.add("present");
-else d.classList.add("absent");
+    d.innerText=val[i]||"";
+    row.appendChild(d);
+  }
 
-d.innerText=val[i]||"";
-r.appendChild(d);
-}
+  board.appendChild(row);
 
-board.appendChild(r);
-
-if(val===answer){
-document.getElementById("wm").innerText="Correct ❤️";
-setTimeout(()=>go("conn"),1200);
-}
-
+  if(val===answer){
+    document.getElementById("wmsg").innerText="Correct ❤️";
+    setTimeout(()=>go("conn"),1000);
+  }
 }
 
 /* CONNECTIONS */
 const groups=[
 ["SURAT","VEGAS","CHICAGO","HOME"],
 ["NIDHI","DEEPAK","PRISHA","FAMILY"],
-["LOVE","TRUST","LAUGHTER","SUPPORT"],
+["LOVE","TRUST","CARE","HOPE"],
 ["MEETING","WEDDING","FOREVER","ANNIVERSARY"]
 ];
 
-const gridC=document.getElementById("gridC");
-let selected=[];
+const words=groups.flat().sort(()=>Math.random()-0.5);
+const cgrid=document.getElementById("cgrid");
+let sel=[];
 
-groups.flat()
-.sort(()=>Math.random()-0.5)
-.forEach(w=>{
+words.forEach(w=>{
+  const d=document.createElement("div");
+  d.className="word";
+  d.innerText=w;
 
-const d=document.createElement("div");
-d.className="word";
-d.innerText=w;
+  d.onclick=()=>{
+    if(d.classList.contains("done")) return;
 
-d.onclick=()=>{
+    d.classList.toggle("sel");
 
-if(d.classList.contains("done")) return;
+    if(d.classList.contains("sel")) sel.push(d);
+    else sel=sel.filter(x=>x!==d);
 
-d.classList.toggle("sel");
+    if(sel.length===4){
+      const vals=sel.map(x=>x.innerText);
 
-if(d.classList.contains("sel")){
-selected.push(d);
-}else{
-selected=selected.filter(x=>x!==d);
-}
+      const match=groups.find(g=>g.every(v=>vals.includes(v)));
 
-if(selected.length===4){
+      if(match){
+        sel.forEach(x=>{
+          x.classList.add("done");
+          x.classList.remove("sel");
+        });
+      } else {
+        sel.forEach(x=>x.classList.remove("sel"));
+      }
 
-const vals=selected.map(x=>x.innerText);
+      sel=[];
+    }
+  };
 
-const match=groups.find(g=>
-g.every(v=>vals.includes(v))
-);
-
-if(match){
-selected.forEach(x=>{
-x.classList.remove("sel");
-x.classList.add("done");
-});
-}
-
-selected=[];
-}
-};
-
-gridC.appendChild(d);
+  cgrid.appendChild(d);
 });
 
-/* STRANDS — REAL DRAG VERSION */
+/* STRANDS (SAFE VERSION) */
 const strandWords=["SURAT","VEGAS","PRISHA","LOVE"];
-const found=new Set();
-
 const letters="SURATVEGASPRISHALOVE".split("");
+
 const board=document.getElementById("board");
 
 let path=[];
-let isDown=false;
+let dragging=false;
 
 letters.forEach(l=>{
+  const c=document.createElement("div");
+  c.className="cell";
+  c.innerText=l;
 
-const c=document.createElement("div");
-c.className="cell";
-c.innerText=l;
+  c.onmousedown=()=>{dragging=true; add(c);}
+  c.onmouseover=()=>{if(dragging) add(c);}
 
-c.onmousedown=()=>start(c);
-c.onmouseover=()=>move(c);
-
-c.ontouchstart=()=>start(c);
-c.ontouchmove=(e)=>{
-const el=document.elementFromPoint(
-e.touches[0].clientX,
-e.touches[0].clientY
-);
-if(el && el.classList.contains("cell")) move(el);
-};
-
-board.appendChild(c);
-
+  board.appendChild(c);
 });
 
-document.addEventListener("mouseup",end);
-document.addEventListener("touchend",end);
-
-function start(c){
-path=[];
-isDown=true;
-add(c);
-}
-
-function move(c){
-if(!isDown) return;
-if(path.includes(c)) return;
-add(c);
-}
+document.onmouseup=()=>finish();
 
 function add(c){
-c.classList.add("activeCell");
-path.push(c);
+  if(path.includes(c)) return;
+  c.classList.add("selCell");
+  path.push(c);
 }
 
-function end(){
+function finish(){
+  if(!dragging) return;
+  dragging=false;
 
-if(!isDown) return;
-isDown=false;
+  const word=path.map(x=>x.innerText).join("");
 
-const word=path.map(x=>x.innerText).join("");
+  if(strandWords.includes(word)){
+    path.forEach(x=>{
+      x.classList.remove("selCell");
+      x.classList.add("foundCell");
+    });
+    document.getElementById("smsg").innerText="Found: "+word;
+  } else {
+    path.forEach(x=>x.classList.remove("selCell"));
+  }
 
-if(strandWords.includes(word) && !found.has(word)){
-
-found.add(word);
-
-path.forEach(x=>{
-x.classList.remove("activeCell");
-x.classList.add("foundCell");
-});
-
-document.getElementById("sm").innerText="Found: "+word+" ❤️";
-
-}else{
-
-path.forEach(x=>{
-if(!found.has(x.innerText)){
-x.classList.remove("activeCell");
-}
-});
-
-}
-
-path=[];
-
-if(found.size===strandWords.length){
-document.getElementById("sm").innerText="All Strands Completed ❤️";
-}
-
+  path=[];
 }
 
 /* CROSSWORD */
 function checkCross(){
+  const a=document.getElementById("c1").value.toUpperCase();
+  const b=document.getElementById("c2").value.toUpperCase();
+  const c=document.getElementById("c3").value.toUpperCase();
 
-const a=document.getElementById("c1").value.toUpperCase();
-const b=document.getElementById("c2").value.toUpperCase();
-const c=document.getElementById("c3").value.toUpperCase();
-const d=document.getElementById("c4").value.toUpperCase();
-
-if(
-a==="SURAT" &&
-b==="VEGAS" &&
-c==="PRISHA" &&
-(d==="BIG BOWL"||d==="BIGBOWL")
-){
-document.getElementById("cwmsg").innerText="Perfect ❤️";
-setTimeout(()=>go("final"),1500);
-}else{
-document.getElementById("cwmsg").innerText="Try again ❤️";
-}
-
+  if(a==="SURAT" && b==="VEGAS" && c==="PRISHA"){
+    document.getElementById("cmsg").innerText="Perfect ❤️";
+    setTimeout(()=>go("final"),1000);
+  } else {
+    document.getElementById("cmsg").innerText="Try again ❤️";
+  }
 }
 
 </script>
