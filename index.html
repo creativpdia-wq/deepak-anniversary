@@ -1,283 +1,116 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>14 Years of Nidhi ❤️ Deepak</title>
-
-<style>
-body{
-    margin:0;
-    font-family:Arial,sans-serif;
-    background:linear-gradient(135deg,#ff9a9e,#fad0c4);
-    text-align:center;
-    color:#333;
-}
-
-.container{
-    max-width:700px;
-    margin:auto;
-    padding:20px;
-}
-
-.card{
-    background:white;
-    border-radius:20px;
-    padding:25px;
-    margin-top:20px;
-    box-shadow:0 10px 30px rgba(0,0,0,0.15);
-}
-
-h1{
-    color:#e91e63;
-}
-
-.word{
-    font-size:40px;
-    letter-spacing:10px;
-    margin:20px 0;
-}
-
-input{
-    padding:12px;
-    font-size:18px;
-    width:220px;
-    text-transform:uppercase;
-}
-
-button{
-    padding:12px 20px;
-    border:none;
-    border-radius:10px;
-    background:#e91e63;
-    color:white;
-    font-size:16px;
-    cursor:pointer;
-    margin-top:10px;
-}
-
-button:hover{
-    background:#d81b60;
-}
-
-img{
-    width:100%;
-    border-radius:15px;
-    margin-top:15px;
-}
-
-.hidden{
-    display:none;
-}
-
-.progress{
-    margin-top:15px;
-    font-weight:bold;
-    color:#e91e63;
-}
-
-.final{
-    font-size:22px;
-    line-height:1.6;
-}
-
-.hearts{
-    font-size:30px;
-    animation:pulse 1s infinite;
-}
-
-@keyframes pulse{
-    50%{transform:scale(1.1);}
-}
-</style>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>14 Years of Nidhi ❤️ Deepak</title>
+  <link rel="stylesheet" href="style.css">
 </head>
 <body>
 
-<audio autoplay loop controls>
-    <source src="MUSIC_URL" type="audio/mpeg">
+<div class="screen active" id="welcome">
+  <h1>❤️ Nidhi & Deepak ❤️</h1>
+  <h2>14 Wonderful Years</h2>
+
+  <p>
+    Deepak, solve the puzzles and unlock our love story.
+  </p>
+
+  <button onclick="nextScreen('level1')">
+    Start Adventure
+  </button>
+</div>
+
+<div class="screen" id="level1">
+  <h2>Level 1</h2>
+  <p>Guess the city where many memories began.</p>
+
+  <input id="cityGuess" maxlength="5">
+  <button onclick="checkSurat()">Submit</button>
+
+  <p id="cityMessage"></p>
+</div>
+
+<div class="screen" id="memory1">
+  <h2>Memory Unlocked ❤️</h2>
+
+  <img src="photo1.jpg" alt="Memory">
+
+  <p>
+    SURAT ❤️
+    <br>
+    Where our story became unforgettable.
+  </p>
+
+  <button onclick="nextScreen('level2')">
+    Continue
+  </button>
+</div>
+
+<div class="screen" id="level2">
+  <h2>Level 2</h2>
+
+  <p>Guess your special nickname.</p>
+
+  <input id="nickGuess" maxlength="6">
+
+  <button onclick="checkBacchu()">
+    Submit
+  </button>
+
+  <p id="nickMessage"></p>
+</div>
+
+<div class="screen" id="memory2">
+  <h2>Bacchu ❤️</h2>
+
+  <img src="photo2.jpg">
+
+  <p>
+    Fourteen years later and you're still my favorite person.
+  </p>
+
+  <button onclick="nextScreen('final')">
+    Final Surprise
+  </button>
+</div>
+
+<div class="screen" id="final">
+  <img src="photo3.jpg">
+
+  <h2>Happy 14th Anniversary ❤️</h2>
+
+  <p>
+    Thank you for every laugh, every memory,
+    and every beautiful moment.
+  </p>
+
+  <p>
+    I'd choose you again.
+    Every single time.
+  </p>
+
+  <button onclick="showGift()">
+    Reveal Your Gift 🎁
+  </button>
+
+  <div id="gift" style="display:none;">
+    <h3>Gift Tracking Status</h3>
+
+    <p>
+      Delivered Successfully ❤️
+    </p>
+
+    <p>
+      Hint: Check under your pillow 😘
+    </p>
+  </div>
+</div>
+
+<audio autoplay loop>
+  <source src="music.mp3" type="audio/mpeg">
 </audio>
 
-<div class="container">
-
-<div id="start" class="card">
-    <h1>❤️ 14 Years of Nidhi & Deepak ❤️</h1>
-
-    <p>
-    Hi Deepak,
-    <br><br>
-    For the last 14 years you've been my favorite person to laugh with,
-    travel with, and annoy every single day.
-    <br><br>
-    Solve these puzzles to unlock our story.
-    </p>
-
-    <button onclick="showLevel1()">Start Adventure</button>
-</div>
-
-<div id="level1" class="card hidden">
-    <h2>Level 1</h2>
-    <p>Guess the special place (5 letters)</p>
-
-    <input id="guess1">
-    <br>
-    <button onclick="check1()">Submit</button>
-
-    <p id="msg1"></p>
-</div>
-
-<div id="success1" class="card hidden">
-    <h2>🎉 Correct!</h2>
-
-    <p>
-    SURAT ❤️
-    <br><br>
-    Where so many memories began.
-    Fourteen years later,
-    I'd still choose this story,
-    and I'd still choose you.
-    </p>
-
-    <img src=photo1.jpg>
-
-    <button onclick="showLevel2()">Next Memory</button>
-</div>
-
-<div id="level2" class="card hidden">
-    <h2>Level 2</h2>
-    <p>Guess the nickname (6 letters)</p>
-
-    <input id="guess2">
-    <br>
-    <button onclick="check2()">Submit</button>
-
-    <p id="msg2"></p>
-</div>
-
-<div id="success2" class="card hidden">
-    <h2>😂 You Know This One!</h2>
-
-    <p>
-    BACCHU ❤️
-    <br><br>
-    The nickname that survived years of marriage,
-    countless conversations,
-    and all our adventures.
-    </p>
-
-    <img src="photo2.jpg">
-
-    <button onclick="showQuiz()">Continue</button>
-</div>
-
-<div id="quiz" class="card hidden">
-    <h2>Bonus Marriage Quiz 😄</h2>
-
-    <p>Who is usually right?</p>
-
-    <button onclick="answerQuiz()">Nidhi</button>
-    <button onclick="answerQuiz()">Nidhi</button>
-    <button onclick="answerQuiz()">Nidhi</button>
-    <button onclick="answerQuiz()">Deepak</button>
-
-    <p id="quizmsg"></p>
-</div>
-
-<div id="final" class="card hidden">
-    <div class="hearts">❤️❤️❤️</div>
-
-    <h2>Final Puzzle Solved</h2>
-
-    <img src="photo3.jpg">
-
-    <div class="final">
-
-    <p>
-    Husband Level: Expert
-    <br>
-    Marriage Streak: 14 Years
-    <br>
-    Love Level: Unlimited
-    <br><br>
-
-    Favorite Person Status:
-    CONFIRMED ❤️
-    </p>
-
-    <p>
-    Happy 14th Anniversary Deepak.
-    <br><br>
-    Thank you for every laugh,
-    every memory,
-    and every moment.
-    </p>
-
-    <h3>🎁 One Last Surprise 🎁</h3>
-
-    <p>
-    A special anniversary gift is waiting...
-    </p>
-
-    <button onclick="window.location.href='TRACKING_LINK'">
-        Track My Gift 🎁
-    </button>
-
-    </div>
-</div>
-
-</div>
-
-<script>
-
-function showLevel1(){
-    document.getElementById('start').classList.add('hidden');
-    document.getElementById('level1').classList.remove('hidden');
-}
-
-function check1(){
-    let guess=document.getElementById('guess1').value.toUpperCase();
-
-    if(guess==="SURAT"){
-        document.getElementById('level1').classList.add('hidden');
-        document.getElementById('success1').classList.remove('hidden');
-    }else{
-        document.getElementById('msg1').innerHTML=
-        "❌ Hint: A city full of memories.";
-    }
-}
-
-function showLevel2(){
-    document.getElementById('success1').classList.add('hidden');
-    document.getElementById('level2').classList.remove('hidden');
-}
-
-function check2(){
-    let guess=document.getElementById('guess2').value.toUpperCase();
-
-    if(guess==="BACCHU"){
-        document.getElementById('level2').classList.add('hidden');
-        document.getElementById('success2').classList.remove('hidden');
-    }else{
-        document.getElementById('msg2').innerHTML=
-        "❌ Hint: Your favorite nickname.";
-    }
-}
-
-function showQuiz(){
-    document.getElementById('success2').classList.add('hidden');
-    document.getElementById('quiz').classList.remove('hidden');
-}
-
-function answerQuiz(){
-    document.getElementById('quizmsg').innerHTML =
-    "😂 Correct answer accepted. Marriage remains healthy.";
-
-    setTimeout(()=>{
-        document.getElementById('quiz').classList.add('hidden');
-        document.getElementById('final').classList.remove('hidden');
-    },2500);
-}
-
-</script>
-
+<script src="script.js"></script>
 </body>
 </html>
