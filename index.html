@@ -40,21 +40,38 @@ body{
   color:#aaa;
 }
 
-/* WORDLE */
+/* WORDLE UI */
 input{
   padding:10px;
   margin:10px;
   border-radius:8px;
   border:none;
   text-align:center;
+  font-size:16px;
+}
+
+button{
+  padding:10px 15px;
+  border:none;
+  border-radius:8px;
+  background:#ff4d6d;
+  color:white;
+  cursor:pointer;
+}
+
+.grid{
+  margin-top:15px;
+  display:flex;
+  justify-content:center;
 }
 
 .tile{
-  display:inline-block;
   width:40px;
   height:40px;
-  line-height:40px;
   margin:3px;
+  display:flex;
+  align-items:center;
+  justify-content:center;
   border:2px solid #444;
   text-transform:uppercase;
   font-weight:bold;
@@ -68,33 +85,36 @@ input{
 
 <body>
 
-<!-- SCENES -->
+<!-- SCENE 1 -->
 <div id="s1" class="scene show">
   <h1>14 Years of Us ❤️</h1>
   <p>Nidhi & Deepak</p>
   <div class="photo">Opening Memory</div>
 </div>
 
+<!-- WORDLE SCENE -->
 <div id="s2" class="scene">
-  <h2>Surat — Where it began</h2>
+  <h2>Puzzle 1 ❤️</h2>
+  <p>Where it all began</p>
 
   <input id="winput" placeholder="5-letter word">
-  <button onclick="checkWord()">Guess</button>
+  <button onclick="checkWord()">Submit</button>
 
-  <div id="grid"></div>
+  <div id="grid" class="grid"></div>
   <p id="msg"></p>
 </div>
 
+<!-- REST -->
 <div id="s3" class="scene">
-  <h2>Vegas — Memories</h2>
+  <h2>Vegas Memories ❤️</h2>
 </div>
 
 <div id="s4" class="scene">
-  <h2>Chicago — Journey</h2>
+  <h2>Chicago Journey ❤️</h2>
 </div>
 
 <div id="s5" class="scene">
-  <h2>Prisha — Our world ❤️</h2>
+  <h2>Prisha ❤️ Our World</h2>
 </div>
 
 <div id="s6" class="scene">
@@ -112,31 +132,32 @@ function showScene(n){
     if(el) el.classList.remove("show");
   });
 
-  const current=document.getElementById(scenes[n]);
-  if(current) current.classList.add("show");
+  document.getElementById(scenes[n]).classList.add("show");
 }
 
-function next(){
+/* AUTO PLAY ONLY UNTIL WORDLE */
+function autoPlay(){
+  if(i===1) return; // STOP at Wordle scene
+
   i++;
   if(i>=scenes.length) return;
 
   showScene(i);
-  setTimeout(next,3500);
+  setTimeout(autoPlay,3500);
 }
 
 document.addEventListener("DOMContentLoaded",()=>{
   showScene(0);
-  setTimeout(next,3500);
+  setTimeout(autoPlay,3500);
 });
 
-/* WORDLE */
+/* WORDLE (FIXED) */
 const answer="SURAT";
 
 function checkWord(){
   const val=document.getElementById("winput").value.toUpperCase();
   const grid=document.getElementById("grid");
-
-  if(!grid) return;
+  const msg=document.getElementById("msg");
 
   grid.innerHTML="";
 
@@ -153,10 +174,15 @@ function checkWord(){
   }
 
   if(val===answer){
-    document.getElementById("msg").innerText="Correct ❤️";
-    setTimeout(()=>showScene(2),1500);
+    msg.innerText="Correct ❤️";
+
+    setTimeout(()=>{
+      i=1;
+      autoPlay(); // resume movie
+      showScene(2);
+    },1500);
   } else {
-    document.getElementById("msg").innerText="Try again ❤️";
+    msg.innerText="Try again ❤️";
   }
 }
 
