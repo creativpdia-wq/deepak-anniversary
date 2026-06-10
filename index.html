@@ -27,7 +27,6 @@ body{
   justify-content:center;
 }
 
-/* BUTTONS */
 button{
   padding:12px 18px;
   margin:10px;
@@ -243,7 +242,6 @@ let row=0;
 function checkWordle(){
 
 const val=document.getElementById("w").value.toUpperCase();
-
 const board=document.getElementById("board");
 
 if(val.length!==5) return;
@@ -274,7 +272,7 @@ setTimeout(()=>go("conn"),1200);
 row++;
 }
 
-/* CONNECTIONS (FIXED) */
+/* CONNECTIONS */
 const groups=[
 ["SURAT","VEGAS","CHICAGO","HOME"],
 ["NIDHI","DEEPAK","PRISHA","FAMILY"],
@@ -328,7 +326,7 @@ selected=[];
 grid.appendChild(d);
 });
 
-/* STRANDS (FIXED) */
+/* STRANDS — FIXED WORKING VERSION */
 const strandWords=["SURAT","VEGAS","PRISHA","LOVE"];
 const found=new Set();
 
