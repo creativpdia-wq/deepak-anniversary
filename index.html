@@ -2,16 +2,14 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width,initial-scale=1.0">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>14 Years of Us ❤️</title>
 
 <style>
-*{box-sizing:border-box}
-
 body{
   margin:0;
-  font-family:Arial,Helvetica,sans-serif;
-  background:#121213;
+  font-family:Arial;
+  background:#0e0e10;
   color:white;
   text-align:center;
 }
@@ -29,345 +27,255 @@ body{
   justify-content:center;
 }
 
+/* BUTTONS */
 button{
-  background:#ff4d6d;
-  color:white;
+  padding:12px 18px;
+  margin:10px;
   border:none;
   border-radius:10px;
-  padding:12px 20px;
-  margin:10px;
   cursor:pointer;
   font-size:16px;
+  background:#ff4d6d;
+  color:white;
 }
 
-.hero-img{
+/* SLIDESHOW */
+img{
   width:300px;
   max-width:90%;
-  border-radius:16px;
-  margin:15px 0;
-}
-
-.slideshow{
-  width:320px;
-  max-width:90%;
-  height:400px;
-  object-fit:cover;
-  border-radius:18px;
-  margin:15px 0;
+  border-radius:15px;
+  margin:15px;
 }
 
 /* WORDLE */
-.board{
-  display:grid;
-  gap:6px;
-  margin:20px auto;
-}
-
 .row{
-  display:grid;
-  grid-template-columns:repeat(5,60px);
-  gap:6px;
+  display:flex;
+  justify-content:center;
+  margin:5px;
 }
 
 .tile{
-  width:60px;
-  height:60px;
+  width:50px;
+  height:50px;
   border:2px solid #3a3a3c;
   display:flex;
   align-items:center;
   justify-content:center;
-  font-size:28px;
+  font-size:24px;
   font-weight:bold;
+  margin:3px;
   text-transform:uppercase;
 }
 
-.correct{
-  background:#538d4e;
-  border-color:#538d4e;
+.correct{background:#538d4e;}
+.present{background:#b59f3b;}
+.absent{background:#3a3a3c;}
+
+/* CONNECTIONS */
+.grid{
+  display:grid;
+  grid-template-columns:repeat(4,1fr);
+  gap:10px;
+  max-width:500px;
 }
 
-.present{
-  background:#b59f3b;
-  border-color:#b59f3b;
+.word{
+  background:#222;
+  padding:10px;
+  border-radius:8px;
+  cursor:pointer;
 }
 
-.absent{
-  background:#3a3a3c;
-  border-color:#3a3a3c;
+.sel{background:#ff4d6d;}
+.done{background:#538d4e;}
+
+/* STRANDS */
+#letterGrid{
+  display:grid;
+  grid-template-columns:repeat(6,40px);
+  gap:6px;
+  justify-content:center;
+  margin:20px auto;
+}
+
+.letter{
+  width:40px;
+  height:40px;
+  background:#222;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  border-radius:6px;
+  cursor:pointer;
+}
+
+/* CROSSWORD */
+.cw{
+  text-align:left;
+  max-width:300px;
+  margin:auto;
 }
 
 input{
   padding:10px;
+  margin:5px;
   border-radius:8px;
   border:none;
-  margin-top:10px;
-  text-transform:uppercase;
   text-align:center;
-}
-
-/* CONNECTIONS */
-.words{
-  display:grid;
-  grid-template-columns:repeat(4,1fr);
-  gap:10px;
-  max-width:700px;
-  margin:auto;
-}
-
-.word{
-  background:#2d2d2d;
-  padding:15px;
-  border-radius:10px;
-  cursor:pointer;
-}
-
-.selected{
-  background:#ff4d6d;
-}
-
-.solved{
-  background:#538d4e;
+  text-transform:uppercase;
 }
 </style>
 </head>
+
 <body>
 
 <audio id="music" loop>
-  <source src="sab-tera.mp3" type="audio/mpeg">
+  <source src="sab-tera.mp3">
 </audio>
 
 <!-- INTRO -->
+<div id="intro" class="screen active">
+  <h1>14 Years of Us ❤️</h1>
 
-<section id="intro" class="screen active">
+  <img id="slide" src="photo1.jpg">
 
-<h1>14 Years of Us ❤️</h1>
+  <p>Nidhi ❤️ Deepak</p>
 
-<h3>Nidhi ❤️ Deepak</h3>
-
-<img id="slide" class="slideshow" src="photo1.jpg">
-
-<p>
-Surat → Vegas → Chicago → Prisha → Forever
-</p>
-
-<button onclick="startStory()">
-Start Our Story ❤️
-</button>
-
-</section>
+  <button onclick="start()">Start Our Story ❤️</button>
+</div>
 
 <!-- WORDLE -->
+<div id="wordle" class="screen">
+  <h2>Wordle ❤️</h2>
 
-<section id="wordle" class="screen">
+  <input id="w" maxlength="5" placeholder="5 letters">
+  <button onclick="checkWordle()">Guess</button>
 
-<h2>Puzzle 1</h2>
+  <div id="board"></div>
 
-<p>Guess our special month ❤️</p>
-
-<div id="board" class="board"></div>
-
-<input
-id="guess"
-maxlength="5"
-placeholder="5 letters">
-
-<button onclick="submitWordle()">
-Guess
-</button>
-
-<p id="wordleMsg"></p>
-
-</section>
+  <p id="wm"></p>
+</div>
 
 <!-- CONNECTIONS -->
+<div id="conn" class="screen">
+  <h2>Connections ❤️</h2>
 
-<section id="connections" class="screen">
+  <div id="grid" class="grid"></div>
 
-<h2>Puzzle 2: Connections</h2>
+  <p id="cm"></p>
 
-<p>Select groups of 4 that belong together</p>
+  <button onclick="go('strands')">Next</button>
+</div>
 
-<div id="connectionsBoard" class="words"></div>
+<!-- STRANDS -->
+<div id="strands" class="screen">
+  <h2>Strands ❤️</h2>
+  <p>Find memory words</p>
 
-<p id="connectionsMsg"></p>
+  <p><b>SURAT • VEGAS • PRISHA • LOVE</b></p>
 
-<button onclick="showScreen('crossword')">
-Continue
-</button>
+  <div id="letterGrid"></div>
 
-</section>
+  <p id="sm"></p>
+
+  <button onclick="go('cross')">Next</button>
+</div>
 
 <!-- CROSSWORD -->
+<div id="cross" class="screen">
+  <h2>Mini Crossword ❤️</h2>
 
-<section id="crossword" class="screen">
+  <div class="cw">
+    <p>1. City we met</p>
+    <input id="c1">
 
-<h2>Mini Crossword ❤️</h2>
+    <p>2. Anniversary trip city</p>
+    <input id="c2">
 
-<p>City we met</p>
-<input id="cw1">
+    <p>3. Our daughter</p>
+    <input id="c3">
 
-<p>Anniversary trip city</p>
-<input id="cw2">
+    <p>4. Restaurant</p>
+    <input id="c4">
+  </div>
 
-<p>Daughter's name</p>
-<input id="cw3">
+  <button onclick="checkCross()">Submit</button>
 
-<p>Favorite restaurant</p>
-<input id="cw4">
-
-<br><br>
-
-<button onclick="checkCrossword()">
-Submit
-</button>
-
-<p id="cwMsg"></p>
-
-</section>
+  <p id="cwmsg"></p>
+</div>
 
 <!-- FINAL -->
+<div id="final" class="screen">
+  <h1>Happy Anniversary ❤️</h1>
 
-<section id="final" class="screen">
+  <img src="photo5.jpg">
 
-<h1>Happy 14th Anniversary ❤️</h1>
-
-<img src="photo5.jpg" class="hero-img">
-
-<p style="max-width:500px;line-height:1.8">
-
-Dear Deepak,
-
-From Surat where our journey began,
-to Vegas adventures,
-Chicago memories,
-and our beautiful life with Prisha,
-
-every year with you has been my favorite story.
-
-I love you ❤️
-
-</p>
-
-</section>
+  <p>From Surat → Vegas → Chicago → Prisha → Forever ❤️</p>
+</div>
 
 <script>
 
+/* NAV */
+function go(id){
+  document.querySelectorAll(".screen")
+  .forEach(s=>s.classList.remove("active"));
+  document.getElementById(id).classList.add("active");
+}
+
+/* START */
+function start(){
+  document.getElementById("music").play().catch(()=>{});
+  go("wordle");
+}
+
 /* SLIDESHOW */
-
-const photos=[
-"photo1.jpg",
-"photo2.jpg",
-"photo3.jpg",
-"photo4.jpg",
-"photo5.jpg"
-];
-
-let slideIndex=0;
+let i=0;
+const pics=["photo1.jpg","photo2.jpg","photo3.jpg","photo4.jpg","photo5.jpg"];
 
 setInterval(()=>{
-const img=document.getElementById("slide");
-if(!img) return;
-
-slideIndex=(slideIndex+1)%photos.length;
-img.src=photos[slideIndex];
-},3000);
-
-/* NAVIGATION */
-
-function showScreen(id){
-
-document.querySelectorAll(".screen")
-.forEach(s=>s.classList.remove("active"));
-
-document.getElementById(id)
-.classList.add("active");
-}
-
-function startStory(){
-
-document.getElementById("music")
-.play()
-.catch(()=>{});
-
-showScreen("wordle");
-}
+  i=(i+1)%pics.length;
+  document.getElementById("slide").src=pics[i];
+},2500);
 
 /* WORDLE */
+const answer="APRIL";
+let row=0;
 
-const ANSWER="APRIL";
+function checkWordle(){
+
+const val=document.getElementById("w").value.toUpperCase();
 
 const board=document.getElementById("board");
 
-for(let r=0;r<6;r++){
+if(val.length!==5) return;
 
-const row=document.createElement("div");
-row.className="row";
-
-for(let c=0;c<5;c++){
-
-const tile=document.createElement("div");
-tile.className="tile";
-tile.id=`${r}-${c}`;
-
-row.appendChild(tile);
-}
-
-board.appendChild(row);
-}
-
-let currentRow=0;
-
-function submitWordle(){
-
-const guess=document
-.getElementById("guess")
-.value
-.toUpperCase();
-
-if(guess.length!==5)return;
+const r=document.createElement("div");
+r.className="row";
 
 for(let i=0;i<5;i++){
 
-const tile=document.getElementById(
-`${currentRow}-${i}`
-);
+const d=document.createElement("div");
+d.className="tile";
 
-tile.innerText=guess[i];
+if(val[i]===answer[i]) d.classList.add("correct");
+else if(answer.includes(val[i])) d.classList.add("present");
+else d.classList.add("absent");
 
-if(guess[i]===ANSWER[i]){
-tile.classList.add("correct");
-}
-else if(ANSWER.includes(guess[i])){
-tile.classList.add("present");
-}
-else{
-tile.classList.add("absent");
-}
+d.innerText=val[i]||"";
+r.appendChild(d);
 }
 
-if(guess===ANSWER){
+board.appendChild(r);
 
-document.getElementById("wordleMsg")
-.innerText="Correct ❤️";
-
-setTimeout(()=>{
-showScreen("connections");
-},1200);
-
-return;
+if(val===answer){
+document.getElementById("wm").innerText="Correct ❤️";
+setTimeout(()=>go("conn"),1200);
 }
 
-currentRow++;
-
-if(currentRow>=6){
-
-document.getElementById("wordleMsg")
-.innerText="Answer: APRIL ❤️";
-}
+row++;
 }
 
 /* CONNECTIONS */
-
 const groups=[
 ["SURAT","VEGAS","CHICAGO","HOME"],
 ["NIDHI","DEEPAK","PRISHA","FAMILY"],
@@ -375,110 +283,92 @@ const groups=[
 ["MEETING","WEDDING","FOREVER","ANNIVERSARY"]
 ];
 
-const words=groups
-.flat()
-.sort(()=>Math.random()-0.5);
+const words=groups.flat().sort(()=>Math.random()-0.5);
+const grid=document.getElementById("grid");
 
-const board2=
-document.getElementById("connectionsBoard");
+let sel=[];
 
-let selected=[];
+words.forEach(w=>{
+const d=document.createElement("div");
+d.className="word";
+d.innerText=w;
 
-words.forEach(word=>{
+d.onclick=()=>{
 
-const div=document.createElement("div");
+d.classList.toggle("sel");
 
-div.className="word";
-div.innerText=word;
+if(d.classList.contains("sel")) sel.push(d);
+else sel=sel.filter(x=>x!==d);
 
-div.onclick=()=>{
+if(sel.length===4){
 
-if(div.classList.contains("solved"))
-return;
+const vals=sel.map(x=>x.innerText);
 
-div.classList.toggle("selected");
-
-if(div.classList.contains("selected")){
-selected.push(div);
-}
-else{
-selected=selected.filter(x=>x!==div);
-}
-
-if(selected.length===4){
-
-const vals=
-selected.map(x=>x.innerText);
-
-const match=groups.find(g=>
-g.every(v=>vals.includes(v))
-);
+const match=groups.find(g=>g.every(v=>vals.includes(v)));
 
 if(match){
-
-selected.forEach(x=>{
-x.classList.remove("selected");
-x.classList.add("solved");
-});
-
+sel.forEach(x=>x.classList.add("done"));
 }
-else{
-
-selected.forEach(x=>
-x.classList.remove("selected")
-);
-
-}
-
-selected=[];
+sel=[];
 }
 };
 
-board2.appendChild(div);
+grid.appendChild(d);
+});
+
+/* STRANDS */
+const strandWords=["SURAT","VEGAS","PRISHA","LOVE"];
+let found=[];
+let current="";
+
+const letters="SURATVEGASPRISHALOVE".split("");
+const lg=document.getElementById("letterGrid");
+
+letters.forEach(l=>{
+
+const d=document.createElement("div");
+d.className="letter";
+d.innerText=l;
+
+d.onclick=()=>{
+
+current+=l;
+
+let match=strandWords.find(w=>w===current);
+
+if(match && !found.includes(match)){
+found.push(match);
+document.getElementById("sm").innerText="Found: "+match+" ❤️";
+current="";
+}
+
+if(current.length>8) current="";
+};
+
+lg.appendChild(d);
 
 });
 
 /* CROSSWORD */
+function checkCross(){
 
-function checkCrossword(){
-
-const a=
-document.getElementById("cw1")
-.value.toUpperCase();
-
-const b=
-document.getElementById("cw2")
-.value.toUpperCase();
-
-const c=
-document.getElementById("cw3")
-.value.toUpperCase();
-
-const d=
-document.getElementById("cw4")
-.value.toUpperCase();
+const a=document.getElementById("c1").value.toUpperCase();
+const b=document.getElementById("c2").value.toUpperCase();
+const c=document.getElementById("c3").value.toUpperCase();
+const d=document.getElementById("c4").value.toUpperCase();
 
 if(
 a==="SURAT" &&
 b==="VEGAS" &&
 c==="PRISHA" &&
-(d==="BIG BOWL" || d==="BIGBOWL")
+(d==="BIG BOWL"||d==="BIGBOWL")
 ){
-
-document.getElementById("cwMsg")
-.innerText="Perfect ❤️";
-
-setTimeout(()=>{
-showScreen("final");
-},1500);
-
+document.getElementById("cwmsg").innerText="Perfect ❤️";
+setTimeout(()=>go("final"),1500);
+}else{
+document.getElementById("cwmsg").innerText="Try again ❤️";
 }
-else{
 
-document.getElementById("cwMsg")
-.innerText="Try again ❤️";
-
-}
 }
 
 </script>
