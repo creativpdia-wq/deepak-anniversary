@@ -2,37 +2,52 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
 <title>14 Years of Us ❤️</title>
 
 <style>
 body{
   margin:0;
-  font-family: Arial;
+  font-family: Arial, sans-serif;
   background:#0e0e10;
   color:white;
   text-align:center;
 }
 
-.screen{display:none; padding:20px;}
-.active{display:block;}
+/* cinematic slow transitions */
+.screen{
+  display:none;
+  padding:30px;
+  opacity:0;
+  transform:translateY(25px);
+  transition:all 1.3s ease;
+}
 
+.active{
+  display:block;
+  opacity:1;
+  transform:translateY(0);
+}
+
+/* buttons */
 button{
-  padding:12px 16px;
-  margin:8px;
+  padding:12px 18px;
+  margin:10px;
   border:none;
   border-radius:10px;
   cursor:pointer;
+  font-size:15px;
 }
 
-.btn{background:#ff4d6d; color:white;}
-.btn2{background:#333; color:white;}
+.btn{background:#ff4d6d;color:white;}
+.btn2{background:#333;color:white;}
 
+/* photos */
 .photo{
-  margin:15px auto;
-  padding:20px;
+  margin:20px auto;
+  padding:30px;
   width:85%;
-  max-width:320px;
+  max-width:340px;
   background:#1f1f1f;
   border-radius:12px;
   color:#aaa;
@@ -41,20 +56,20 @@ button{
 /* WORDLE */
 .grid{
   display:grid;
-  grid-template-columns: repeat(5, 45px);
+  grid-template-columns: repeat(5, 48px);
   gap:6px;
   justify-content:center;
-  margin-top:15px;
+  margin-top:20px;
 }
 
 .tile{
-  width:45px;height:45px;
+  width:48px;height:48px;
+  border:2px solid #444;
   display:flex;
   align-items:center;
   justify-content:center;
-  border:2px solid #444;
-  text-transform:uppercase;
   font-weight:bold;
+  text-transform:uppercase;
   background:#111;
 }
 
@@ -65,12 +80,12 @@ button{
 /* CONNECTIONS */
 .word{
   display:inline-block;
-  padding:10px;
-  margin:5px;
+  padding:10px 12px;
+  margin:6px;
   background:#222;
   border-radius:8px;
   cursor:pointer;
-  user-select:none;
+  transition:0.3s;
 }
 
 .word.selected{background:#ff4d6d;}
@@ -79,14 +94,14 @@ button{
 /* STRANDS */
 .letters{
   display:grid;
-  grid-template-columns: repeat(6, 40px);
-  gap:5px;
+  grid-template-columns: repeat(6, 42px);
+  gap:6px;
   justify-content:center;
-  margin-top:10px;
+  margin-top:15px;
 }
 
 .letter{
-  width:40px;height:40px;
+  width:42px;height:42px;
   background:#222;
   display:flex;
   align-items:center;
@@ -95,7 +110,16 @@ button{
   cursor:pointer;
 }
 
-.found{background:#3aa655;}
+.letter.found{background:#3aa655;}
+
+/* inputs */
+input{
+  padding:10px;
+  margin:8px;
+  border-radius:8px;
+  border:none;
+  text-align:center;
+}
 </style>
 </head>
 
@@ -110,15 +134,16 @@ button{
   <div class="photo">PHOTO_01_COVER.jpg</div>
 
   <button class="btn" onclick="playSong()">▶ Play Our Song</button>
-  <button class="btn2" onclick="go('wordle')">Start</button>
+  <button class="btn2" onclick="go('wordle')">Start Journey</button>
 </div>
 
 <!-- WORDLE -->
 <div id="wordle" class="screen">
-  <h2>Puzzle 1: Where it began</h2>
+  <h2>Puzzle 1</h2>
+  <p>Where it all began ❤️</p>
 
-  <input id="winput" placeholder="5-letter word">
-  <button class="btn" onclick="checkWord()">Guess</button>
+  <input id="winput" placeholder="5-letter word"/>
+  <button class="btn" onclick="checkWord()">Submit</button>
 
   <div id="grid" class="grid"></div>
   <p id="wmsg"></p>
@@ -126,31 +151,45 @@ button{
 
 <!-- CONNECTIONS -->
 <div id="connections" class="screen">
-  <h2>Puzzle 2: Connections</h2>
-  <p>Select groups of 4</p>
+  <h2>Puzzle 2</h2>
+  <p>Group the memories ❤️</p>
 
   <div id="words"></div>
   <p id="cmsg"></p>
 
-  <button class="btn" onclick="go('strands')">Next</button>
+  <button class="btn" onclick="go('strands')">Continue</button>
 </div>
 
-<!-- STRANDS -->
+<!-- WORD HUNT -->
 <div id="strands" class="screen">
-  <h2>Puzzle 3: Our Journey</h2>
+  <h2>Puzzle 3</h2>
+  <p>Find hidden memories ❤️</p>
 
   <div class="letters" id="letters"></div>
 
+  <p id="smsg"></p>
+
   <div class="photo">PHOTO_02_FAMILY.jpg</div>
 
-  <button class="btn" onclick="go('crossword')">Next</button>
+  <button class="btn" onclick="go('crossword')">Continue</button>
 </div>
 
 <!-- CROSSWORD -->
 <div id="crossword" class="screen">
   <h2>Puzzle 4</h2>
 
-  <p>Surat • Vegas • Prisha</p>
+  <p>City we met</p>
+  <input id="c1"/>
+
+  <p>Anniversary trip</p>
+  <input id="c2"/>
+
+  <p>Daughter’s name</p>
+  <input id="c3"/>
+
+  <button class="btn" onclick="checkCrossword()">Submit</button>
+
+  <p id="cwmsg"></p>
 
   <div class="photo">PHOTO_03_VEGAS.jpg</div>
 
@@ -163,11 +202,12 @@ button{
 
   <div class="photo">PHOTO_04_BIGBOWL.jpg</div>
 
-  <p>
+  <p style="line-height:1.6;">
     Dear Deepak,<br><br>
-    From Surat to Vegas to Chicago,<br>
-    and building a life with Prisha,<br><br>
-    every year has been beautiful with you ❤️
+    From Surat where it all began,<br>
+    to Vegas celebrations,<br>
+    to building a life with Prisha,<br><br>
+    every year has been our story ❤️
   </p>
 
   <div class="photo">PHOTO_05_FAMILY.jpg</div>
@@ -175,10 +215,12 @@ button{
 
 <script>
 
-/* NAV */
+/* NAVIGATION */
 function go(id){
   document.querySelectorAll('.screen').forEach(s=>s.classList.remove('active'));
-  document.getElementById(id).classList.add('active');
+  setTimeout(()=>{
+    document.getElementById(id).classList.add('active');
+  },400);
 }
 
 /* SONG */
@@ -192,7 +234,6 @@ const answer="SURAT";
 function checkWord(){
   let val=document.getElementById("winput").value.toUpperCase();
   let grid=document.getElementById("grid");
-  let msg=document.getElementById("wmsg");
 
   grid.innerHTML="";
 
@@ -200,7 +241,7 @@ function checkWord(){
     let d=document.createElement("div");
     d.className="tile";
 
-    if(val[i]==answer[i]) d.classList.add("correct");
+    if(val[i]===answer[i]) d.classList.add("correct");
     else if(answer.includes(val[i])) d.classList.add("present");
     else d.classList.add("wrong");
 
@@ -209,10 +250,10 @@ function checkWord(){
   }
 
   if(val===answer){
-    msg.innerText="Correct ❤️";
-    setTimeout(()=>go('connections'),1200);
+    document.getElementById("wmsg").innerText="Correct ❤️";
+    setTimeout(()=>go('connections'),1500);
   } else {
-    msg.innerText="Try again ❤️";
+    document.getElementById("wmsg").innerText="Try again ❤️";
   }
 }
 
@@ -236,19 +277,12 @@ words.forEach(w=>{
   d.innerText=w;
 
   d.onclick=()=>{
-    if(d.classList.contains("correct")) return;
-
     d.classList.toggle("selected");
 
-    if(d.classList.contains("selected")){
-      selected.push(d);
-    } else {
-      selected=selected.filter(x=>x!==d);
-    }
+    if(d.classList.contains("selected")) selected.push(d);
+    else selected=selected.filter(x=>x!==d);
 
-    if(selected.length===4){
-      checkGroup();
-    }
+    if(selected.length===4) checkGroup();
   };
 
   container.appendChild(d);
@@ -260,10 +294,7 @@ function checkGroup(){
   let match=groups.find(g=>g.every(v=>vals.includes(v)));
 
   if(match){
-    selected.forEach(x=>{
-      x.classList.remove("selected");
-      x.classList.add("correct");
-    });
+    selected.forEach(x=>x.classList.add("correct"));
     solved++;
   } else {
     selected.forEach(x=>x.classList.remove("selected"));
@@ -272,23 +303,46 @@ function checkGroup(){
   selected=[];
 
   if(solved===4){
-    document.getElementById("cmsg").innerText="All solved ❤️";
+    document.getElementById("cmsg").innerText="All memories connected ❤️";
   }
 }
 
-/* STRANDS */
+/* WORD HUNT */
+const target=["SURAT","VEGAS","PRISHA","LOVE"];
+let current="";
 let letters="SURATVEGASPRISHALOVE".split("");
-let lbox=document.getElementById("letters");
+
+let box=document.getElementById("letters");
 
 letters.forEach(l=>{
   let d=document.createElement("div");
   d.className="letter";
   d.innerText=l;
 
-  d.onclick=()=>d.classList.toggle("found");
+  d.onclick=()=>{
+    current+=l;
 
-  lbox.appendChild(d);
+    if(target.includes(current)){
+      document.getElementById("smsg").innerText="Found: "+current+" ❤️";
+      current="";
+    }
+  };
+
+  box.appendChild(d);
 });
+
+/* CROSSWORD */
+function checkCrossword(){
+  let a1=document.getElementById("c1").value.toUpperCase();
+  let a2=document.getElementById("c2").value.toUpperCase();
+  let a3=document.getElementById("c3").value.toUpperCase();
+
+  if(a1==="SURAT" && a2==="VEGAS" && a3==="PRISHA"){
+    document.getElementById("cwmsg").innerText="Perfect ❤️";
+  } else {
+    document.getElementById("cwmsg").innerText="Try again ❤️";
+  }
+}
 
 </script>
 
