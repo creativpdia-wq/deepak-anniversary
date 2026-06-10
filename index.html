@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Our Story ❤️ Cinematic Edition</title>
+<title>Our Story ❤️</title>
 
 <style>
 body{
@@ -14,7 +14,6 @@ body{
   overflow:hidden;
 }
 
-/* SCREEN SYSTEM */
 .screen{
   position:absolute;
   inset:0;
@@ -28,6 +27,7 @@ body{
   padding:20px;
   text-align:center;
 }
+
 .screen.active{
   opacity:1;
   pointer-events:auto;
@@ -40,7 +40,6 @@ body{
   z-index:-1;
 }
 
-/* BUTTON */
 button{
   padding:12px 18px;
   margin:10px;
@@ -51,7 +50,6 @@ button{
   cursor:pointer;
 }
 
-/* IMAGES */
 img{
   width:260px;
   border-radius:12px;
@@ -67,7 +65,6 @@ img{
   justify-content:center;
   margin:3px;
   font-weight:bold;
-  text-transform:uppercase;
 }
 .correct{background:#4caf50;}
 .present{background:#c9b458;}
@@ -88,26 +85,37 @@ img{
 /* STRANDS */
 #board{
   display:grid;
-  grid-template-columns:repeat(6,40px);
-  gap:5px;
+  grid-template-columns:repeat(6,42px);
+  gap:6px;
+  justify-content:center;
   margin-top:20px;
 }
+
 .cell{
-  width:40px;height:40px;
-  background:#222;
+  width:42px;
+  height:42px;
+  background:#1f1f1f;
+  border-radius:8px;
   display:flex;
   align-items:center;
   justify-content:center;
-  border-radius:6px;
-  user-select:none;
   cursor:pointer;
+  user-select:none;
+  transition:0.2s;
 }
-.active{background:#555;}
-.found{background:#4caf50;}
+
+.cell.active{
+  background:#ff4d6d;
+  transform:scale(1.05);
+}
+
+.cell.found{
+  background:#4caf50;
+}
 
 /* FINAL */
 .glow{
-  text-shadow:0 0 10px #ff4d6d;
+  text-shadow:0 0 12px #ff4d6d;
 }
 </style>
 </head>
@@ -115,25 +123,21 @@ img{
 <body>
 
 <audio id="music" loop>
-  <source src="https://www.youtube.com/watch?v=sZfnwayum2M">
+  <source src="https://www.soundhelix.com/examples/mp3/SoundHelix-Song-1.mp3">
 </audio>
 
 <!-- INTRO -->
 <div id="intro" class="screen active">
   <div class="bg"></div>
-
   <h1 class="glow">Our Story ❤️</h1>
   <p>14 Years • One Journey • Forever</p>
-
-  <img src="photo1.jpg">
-
+  <img src="https://picsum.photos/300/200?1">
   <button onclick="start()">Begin</button>
 </div>
 
 <!-- WORDLE -->
 <div id="wordle" class="screen">
   <div class="bg"></div>
-
   <h2>Chapter 1: Wordle</h2>
 
   <input id="w" maxlength="5">
@@ -146,10 +150,8 @@ img{
 <!-- CONNECTIONS -->
 <div id="conn" class="screen">
   <div class="bg"></div>
-
   <h2>Chapter 2: Connections</h2>
   <div id="cgrid"></div>
-
   <button onclick="go('strands')">Next</button>
 </div>
 
@@ -158,7 +160,9 @@ img{
   <div class="bg"></div>
 
   <h2>Chapter 3: Strands</h2>
-  <p>Drag letters to form words</p>
+  <p>Find hidden words by dragging</p>
+
+  <button onclick="hint()">Hint</button>
 
   <div id="board"></div>
   <p id="smsg"></p>
@@ -174,7 +178,7 @@ img{
 
   <input id="c1" placeholder="City we met"><br>
   <input id="c2" placeholder="Trip city"><br>
-  <input id="c3" placeholder="Daughter"><br>
+  <input id="c3" placeholder="Daughter">
 
   <button onclick="checkCross()">Finish</button>
   <p id="cmsg"></p>
@@ -185,11 +189,8 @@ img{
   <div class="bg"></div>
 
   <h1 class="glow">Forever ❤️</h1>
-
-  <img src="photo2.jpg">
-  <img src="photo3.jpg">
-
-  <p>Surat → Vegas → Chicago → Prisha → Us ❤️</p>
+  <img src="https://picsum.photos/300/200?2">
+  <p>Surat → Vegas → Chicago → Prisha → Us</p>
 </div>
 
 <script>
@@ -275,33 +276,34 @@ groups.flat().sort(()=>Math.random()-0.5).forEach(w=>{
   cgrid.appendChild(d);
 });
 
-/* STRANDS */
+/* STRANDS (REAL NYT-STYLE DRAG SYSTEM) */
 const strandWords=["SURAT","VEGAS","PRISHA","LOVE"];
-const letters="SURATVEGASPRISHALOVE".split("");
 
+const letters="SURATVEGASPRISHALOVE".split("");
 const board=document.getElementById("board");
+
 let path=[];
-let drag=false;
+let dragging=false;
 
 letters.forEach(l=>{
   const c=document.createElement("div");
   c.className="cell";
   c.innerText=l;
 
-  c.onmousedown=()=>{drag=true; add(c);}
-  c.onmouseover=()=>{if(drag) add(c);}
+  c.onmousedown=()=>{dragging=true; add(c);}
+  c.onmouseover=()=>{if(dragging) add(c);}
 
   board.appendChild(c);
 });
 
 document.onmouseup=()=>{
-  drag=false;
+  dragging=false;
 
   const word=path.map(x=>x.innerText).join("");
 
   if(strandWords.includes(word)){
     path.forEach(x=>x.classList.add("found"));
-    document.getElementById("smsg").innerText="Found: "+word;
+    document.getElementById("smsg").innerText="Found: "+word+" ❤️";
   } else {
     path.forEach(x=>x.classList.remove("active"));
   }
@@ -313,6 +315,18 @@ function add(c){
   if(path.includes(c)) return;
   c.classList.add("active");
   path.push(c);
+}
+
+/* HINT SYSTEM */
+let hintIndex=0;
+
+function hint(){
+  if(hintIndex<strandWords.length){
+    alert("Hint: "+strandWords[hintIndex]);
+    hintIndex++;
+  } else {
+    alert("No more hints ❤️");
+  }
 }
 
 /* CROSSWORD */
