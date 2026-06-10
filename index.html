@@ -88,29 +88,28 @@ img{
 .done{background:#538d4e;}
 
 /* STRANDS */
-#letterGrid{
+#board{
   display:grid;
-  grid-template-columns:repeat(6,40px);
+  grid-template-columns:repeat(6,45px);
   gap:6px;
   justify-content:center;
   margin:20px auto;
 }
 
-.letter{
-  width:40px;
-  height:40px;
+.cell{
+  width:45px;
+  height:45px;
   background:#222;
   display:flex;
   align-items:center;
   justify-content:center;
-  border-radius:6px;
-  cursor:pointer;
+  border-radius:8px;
   user-select:none;
+  cursor:pointer;
 }
 
-.found{
-  background:#538d4e;
-}
+.activeCell{background:#444;}
+.foundCell{background:#538d4e;}
 
 /* CROSSWORD */
 .cw{
@@ -154,7 +153,7 @@ input{
   <input id="w" maxlength="5" placeholder="5 letters">
   <button onclick="checkWordle()">Guess</button>
 
-  <div id="board"></div>
+  <div id="boardW"></div>
   <p id="wm"></p>
 </div>
 
@@ -162,7 +161,7 @@ input{
 <div id="conn" class="screen">
   <h2>Connections ❤️</h2>
 
-  <div id="grid" class="grid"></div>
+  <div id="gridC" class="grid"></div>
 
   <button onclick="go('strands')">Next</button>
 </div>
@@ -170,9 +169,9 @@ input{
 <!-- STRANDS -->
 <div id="strands" class="screen">
   <h2>Strands ❤️</h2>
-  <p>SURAT • VEGAS • PRISHA • LOVE</p>
+  <p>Drag to connect letters</p>
 
-  <div id="letterGrid"></div>
+  <div id="board"></div>
 
   <p id="sm"></p>
 
@@ -237,20 +236,16 @@ setInterval(()=>{
 
 /* WORDLE */
 const answer="APRIL";
-let row=0;
 
 function checkWordle(){
 
 const val=document.getElementById("w").value.toUpperCase();
-const board=document.getElementById("board");
-
-if(val.length!==5) return;
+const board=document.getElementById("boardW");
 
 const r=document.createElement("div");
 r.className="row";
 
 for(let i=0;i<5;i++){
-
 const d=document.createElement("div");
 d.className="tile";
 
@@ -269,7 +264,6 @@ document.getElementById("wm").innerText="Correct ❤️";
 setTimeout(()=>go("conn"),1200);
 }
 
-row++;
 }
 
 /* CONNECTIONS */
@@ -280,8 +274,7 @@ const groups=[
 ["MEETING","WEDDING","FOREVER","ANNIVERSARY"]
 ];
 
-const grid=document.getElementById("grid");
-
+const gridC=document.getElementById("gridC");
 let selected=[];
 
 groups.flat()
@@ -323,65 +316,96 @@ selected=[];
 }
 };
 
-grid.appendChild(d);
+gridC.appendChild(d);
 });
 
-/* STRANDS — FIXED WORKING VERSION */
+/* STRANDS — REAL DRAG VERSION */
 const strandWords=["SURAT","VEGAS","PRISHA","LOVE"];
 const found=new Set();
 
 const letters="SURATVEGASPRISHALOVE".split("");
-const lg=document.getElementById("letterGrid");
+const board=document.getElementById("board");
 
-let selection=[];
+let path=[];
+let isDown=false;
 
 letters.forEach(l=>{
 
-const d=document.createElement("div");
-d.className="letter";
-d.innerText=l;
+const c=document.createElement("div");
+c.className="cell";
+c.innerText=l;
 
-d.onclick=()=>{
+c.onmousedown=()=>start(c);
+c.onmouseover=()=>move(c);
 
-if(d.classList.contains("found")) return;
+c.ontouchstart=()=>start(c);
+c.ontouchmove=(e)=>{
+const el=document.elementFromPoint(
+e.touches[0].clientX,
+e.touches[0].clientY
+);
+if(el && el.classList.contains("cell")) move(el);
+};
 
-d.classList.toggle("sel");
+board.appendChild(c);
 
-if(d.classList.contains("sel")){
-selection.push({el:d,letter:l});
-}else{
-selection=selection.filter(x=>x.el!==d);
+});
+
+document.addEventListener("mouseup",end);
+document.addEventListener("touchend",end);
+
+function start(c){
+path=[];
+isDown=true;
+add(c);
 }
 
-if(selection.length===5){
+function move(c){
+if(!isDown) return;
+if(path.includes(c)) return;
+add(c);
+}
 
-const word=selection.map(x=>x.letter).join("");
+function add(c){
+c.classList.add("activeCell");
+path.push(c);
+}
+
+function end(){
+
+if(!isDown) return;
+isDown=false;
+
+const word=path.map(x=>x.innerText).join("");
 
 if(strandWords.includes(word) && !found.has(word)){
 
 found.add(word);
 
-selection.forEach(x=>{
-x.el.classList.add("found");
-x.el.classList.remove("sel");
+path.forEach(x=>{
+x.classList.remove("activeCell");
+x.classList.add("foundCell");
 });
 
-document.getElementById("sm").innerText=
-"Found: "+word+" ❤️";
+document.getElementById("sm").innerText="Found: "+word+" ❤️";
 
 }else{
-selection.forEach(x=>{
-x.el.classList.remove("sel");
+
+path.forEach(x=>{
+if(!found.has(x.innerText)){
+x.classList.remove("activeCell");
+}
 });
+
 }
 
-selection=[];
+path=[];
+
+if(found.size===strandWords.length){
+document.getElementById("sm").innerText="All Strands Completed ❤️";
 }
-};
 
-lg.appendChild(d);
-
-});
+}
 
 /* CROSSWORD */
 function checkCross(){
