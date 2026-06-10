@@ -1,0 +1,487 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1.0">
+<title>14 Years of Us ❤️</title>
+
+<style>
+*{box-sizing:border-box}
+
+body{
+  margin:0;
+  font-family:Arial,Helvetica,sans-serif;
+  background:#121213;
+  color:white;
+  text-align:center;
+}
+
+.screen{
+  display:none;
+  min-height:100vh;
+  padding:20px;
+}
+
+.active{
+  display:flex;
+  flex-direction:column;
+  align-items:center;
+  justify-content:center;
+}
+
+button{
+  background:#ff4d6d;
+  color:white;
+  border:none;
+  border-radius:10px;
+  padding:12px 20px;
+  margin:10px;
+  cursor:pointer;
+  font-size:16px;
+}
+
+.hero-img{
+  width:300px;
+  max-width:90%;
+  border-radius:16px;
+  margin:15px 0;
+}
+
+.slideshow{
+  width:320px;
+  max-width:90%;
+  height:400px;
+  object-fit:cover;
+  border-radius:18px;
+  margin:15px 0;
+}
+
+/* WORDLE */
+.board{
+  display:grid;
+  gap:6px;
+  margin:20px auto;
+}
+
+.row{
+  display:grid;
+  grid-template-columns:repeat(5,60px);
+  gap:6px;
+}
+
+.tile{
+  width:60px;
+  height:60px;
+  border:2px solid #3a3a3c;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  font-size:28px;
+  font-weight:bold;
+  text-transform:uppercase;
+}
+
+.correct{
+  background:#538d4e;
+  border-color:#538d4e;
+}
+
+.present{
+  background:#b59f3b;
+  border-color:#b59f3b;
+}
+
+.absent{
+  background:#3a3a3c;
+  border-color:#3a3a3c;
+}
+
+input{
+  padding:10px;
+  border-radius:8px;
+  border:none;
+  margin-top:10px;
+  text-transform:uppercase;
+  text-align:center;
+}
+
+/* CONNECTIONS */
+.words{
+  display:grid;
+  grid-template-columns:repeat(4,1fr);
+  gap:10px;
+  max-width:700px;
+  margin:auto;
+}
+
+.word{
+  background:#2d2d2d;
+  padding:15px;
+  border-radius:10px;
+  cursor:pointer;
+}
+
+.selected{
+  background:#ff4d6d;
+}
+
+.solved{
+  background:#538d4e;
+}
+</style>
+</head>
+<body>
+
+<audio id="music" loop>
+  <source src="sab-tera.mp3" type="audio/mpeg">
+</audio>
+
+<!-- INTRO -->
+
+<section id="intro" class="screen active">
+
+<h1>14 Years of Us ❤️</h1>
+
+<h3>Nidhi ❤️ Deepak</h3>
+
+<img id="slide" class="slideshow" src="photo1.jpg">
+
+<p>
+Surat → Vegas → Chicago → Prisha → Forever
+</p>
+
+<button onclick="startStory()">
+Start Our Story ❤️
+</button>
+
+</section>
+
+<!-- WORDLE -->
+
+<section id="wordle" class="screen">
+
+<h2>Puzzle 1</h2>
+
+<p>Guess our special month ❤️</p>
+
+<div id="board" class="board"></div>
+
+<input
+id="guess"
+maxlength="5"
+placeholder="5 letters">
+
+<button onclick="submitWordle()">
+Guess
+</button>
+
+<p id="wordleMsg"></p>
+
+</section>
+
+<!-- CONNECTIONS -->
+
+<section id="connections" class="screen">
+
+<h2>Puzzle 2: Connections</h2>
+
+<p>Select groups of 4 that belong together</p>
+
+<div id="connectionsBoard" class="words"></div>
+
+<p id="connectionsMsg"></p>
+
+<button onclick="showScreen('crossword')">
+Continue
+</button>
+
+</section>
+
+<!-- CROSSWORD -->
+
+<section id="crossword" class="screen">
+
+<h2>Mini Crossword ❤️</h2>
+
+<p>City we met</p>
+<input id="cw1">
+
+<p>Anniversary trip city</p>
+<input id="cw2">
+
+<p>Daughter's name</p>
+<input id="cw3">
+
+<p>Favorite restaurant</p>
+<input id="cw4">
+
+<br><br>
+
+<button onclick="checkCrossword()">
+Submit
+</button>
+
+<p id="cwMsg"></p>
+
+</section>
+
+<!-- FINAL -->
+
+<section id="final" class="screen">
+
+<h1>Happy 14th Anniversary ❤️</h1>
+
+<img src="photo5.jpg" class="hero-img">
+
+<p style="max-width:500px;line-height:1.8">
+
+Dear Deepak,
+
+From Surat where our journey began,
+to Vegas adventures,
+Chicago memories,
+and our beautiful life with Prisha,
+
+every year with you has been my favorite story.
+
+I love you ❤️
+
+</p>
+
+</section>
+
+<script>
+
+/* SLIDESHOW */
+
+const photos=[
+"photo1.jpg",
+"photo2.jpg",
+"photo3.jpg",
+"photo4.jpg",
+"photo5.jpg"
+];
+
+let slideIndex=0;
+
+setInterval(()=>{
+const img=document.getElementById("slide");
+if(!img) return;
+
+slideIndex=(slideIndex+1)%photos.length;
+img.src=photos[slideIndex];
+},3000);
+
+/* NAVIGATION */
+
+function showScreen(id){
+
+document.querySelectorAll(".screen")
+.forEach(s=>s.classList.remove("active"));
+
+document.getElementById(id)
+.classList.add("active");
+}
+
+function startStory(){
+
+document.getElementById("music")
+.play()
+.catch(()=>{});
+
+showScreen("wordle");
+}
+
+/* WORDLE */
+
+const ANSWER="APRIL";
+
+const board=document.getElementById("board");
+
+for(let r=0;r<6;r++){
+
+const row=document.createElement("div");
+row.className="row";
+
+for(let c=0;c<5;c++){
+
+const tile=document.createElement("div");
+tile.className="tile";
+tile.id=`${r}-${c}`;
+
+row.appendChild(tile);
+}
+
+board.appendChild(row);
+}
+
+let currentRow=0;
+
+function submitWordle(){
+
+const guess=document
+.getElementById("guess")
+.value
+.toUpperCase();
+
+if(guess.length!==5)return;
+
+for(let i=0;i<5;i++){
+
+const tile=document.getElementById(
+`${currentRow}-${i}`
+);
+
+tile.innerText=guess[i];
+
+if(guess[i]===ANSWER[i]){
+tile.classList.add("correct");
+}
+else if(ANSWER.includes(guess[i])){
+tile.classList.add("present");
+}
+else{
+tile.classList.add("absent");
+}
+}
+
+if(guess===ANSWER){
+
+document.getElementById("wordleMsg")
+.innerText="Correct ❤️";
+
+setTimeout(()=>{
+showScreen("connections");
+},1200);
+
+return;
+}
+
+currentRow++;
+
+if(currentRow>=6){
+
+document.getElementById("wordleMsg")
+.innerText="Answer: APRIL ❤️";
+}
+}
+
+/* CONNECTIONS */
+
+const groups=[
+["SURAT","VEGAS","CHICAGO","HOME"],
+["NIDHI","DEEPAK","PRISHA","FAMILY"],
+["LOVE","TRUST","LAUGHTER","SUPPORT"],
+["MEETING","WEDDING","FOREVER","ANNIVERSARY"]
+];
+
+const words=groups
+.flat()
+.sort(()=>Math.random()-0.5);
+
+const board2=
+document.getElementById("connectionsBoard");
+
+let selected=[];
+
+words.forEach(word=>{
+
+const div=document.createElement("div");
+
+div.className="word";
+div.innerText=word;
+
+div.onclick=()=>{
+
+if(div.classList.contains("solved"))
+return;
+
+div.classList.toggle("selected");
+
+if(div.classList.contains("selected")){
+selected.push(div);
+}
+else{
+selected=selected.filter(x=>x!==div);
+}
+
+if(selected.length===4){
+
+const vals=
+selected.map(x=>x.innerText);
+
+const match=groups.find(g=>
+g.every(v=>vals.includes(v))
+);
+
+if(match){
+
+selected.forEach(x=>{
+x.classList.remove("selected");
+x.classList.add("solved");
+});
+
+}
+else{
+
+selected.forEach(x=>
+x.classList.remove("selected")
+);
+
+}
+
+selected=[];
+}
+};
+
+board2.appendChild(div);
+
+});
+
+/* CROSSWORD */
+
+function checkCrossword(){
+
+const a=
+document.getElementById("cw1")
+.value.toUpperCase();
+
+const b=
+document.getElementById("cw2")
+.value.toUpperCase();
+
+const c=
+document.getElementById("cw3")
+.value.toUpperCase();
+
+const d=
+document.getElementById("cw4")
+.value.toUpperCase();
+
+if(
+a==="SURAT" &&
+b==="VEGAS" &&
+c==="PRISHA" &&
+(d==="BIG BOWL" || d==="BIGBOWL")
+){
+
+document.getElementById("cwMsg")
+.innerText="Perfect ❤️";
+
+setTimeout(()=>{
+showScreen("final");
+},1500);
+
+}
+else{
+
+document.getElementById("cwMsg")
+.innerText="Try again ❤️";
+
+}
+}
+
+</script>
+
+</body>
+</html>
