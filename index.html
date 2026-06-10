@@ -34,7 +34,6 @@ button{
   border:none;
   border-radius:10px;
   cursor:pointer;
-  font-size:16px;
   background:#ff4d6d;
   color:white;
 }
@@ -51,7 +50,6 @@ img{
 .row{
   display:flex;
   justify-content:center;
-  margin:5px;
 }
 
 .tile{
@@ -61,7 +59,7 @@ img{
   display:flex;
   align-items:center;
   justify-content:center;
-  font-size:24px;
+  font-size:22px;
   font-weight:bold;
   margin:3px;
   text-transform:uppercase;
@@ -84,6 +82,7 @@ img{
   padding:10px;
   border-radius:8px;
   cursor:pointer;
+  user-select:none;
 }
 
 .sel{background:#ff4d6d;}
@@ -107,6 +106,11 @@ img{
   justify-content:center;
   border-radius:6px;
   cursor:pointer;
+  user-select:none;
+}
+
+.found{
+  background:#538d4e;
 }
 
 /* CROSSWORD */
@@ -152,7 +156,6 @@ input{
   <button onclick="checkWordle()">Guess</button>
 
   <div id="board"></div>
-
   <p id="wm"></p>
 </div>
 
@@ -162,17 +165,13 @@ input{
 
   <div id="grid" class="grid"></div>
 
-  <p id="cm"></p>
-
   <button onclick="go('strands')">Next</button>
 </div>
 
 <!-- STRANDS -->
 <div id="strands" class="screen">
   <h2>Strands ❤️</h2>
-  <p>Find memory words</p>
-
-  <p><b>SURAT • VEGAS • PRISHA • LOVE</b></p>
+  <p>SURAT • VEGAS • PRISHA • LOVE</p>
 
   <div id="letterGrid"></div>
 
@@ -275,7 +274,7 @@ setTimeout(()=>go("conn"),1200);
 row++;
 }
 
-/* CONNECTIONS */
+/* CONNECTIONS (FIXED) */
 const groups=[
 ["SURAT","VEGAS","CHICAGO","HOME"],
 ["NIDHI","DEEPAK","PRISHA","FAMILY"],
@@ -283,46 +282,60 @@ const groups=[
 ["MEETING","WEDDING","FOREVER","ANNIVERSARY"]
 ];
 
-const words=groups.flat().sort(()=>Math.random()-0.5);
 const grid=document.getElementById("grid");
 
-let sel=[];
+let selected=[];
 
-words.forEach(w=>{
+groups.flat()
+.sort(()=>Math.random()-0.5)
+.forEach(w=>{
+
 const d=document.createElement("div");
 d.className="word";
 d.innerText=w;
 
 d.onclick=()=>{
 
+if(d.classList.contains("done")) return;
+
 d.classList.toggle("sel");
 
-if(d.classList.contains("sel")) sel.push(d);
-else sel=sel.filter(x=>x!==d);
+if(d.classList.contains("sel")){
+selected.push(d);
+}else{
+selected=selected.filter(x=>x!==d);
+}
 
-if(sel.length===4){
+if(selected.length===4){
 
-const vals=sel.map(x=>x.innerText);
+const vals=selected.map(x=>x.innerText);
 
-const match=groups.find(g=>g.every(v=>vals.includes(v)));
+const match=groups.find(g=>
+g.every(v=>vals.includes(v))
+);
 
 if(match){
-sel.forEach(x=>x.classList.add("done"));
+selected.forEach(x=>{
+x.classList.remove("sel");
+x.classList.add("done");
+});
 }
-sel=[];
+
+selected=[];
 }
 };
 
 grid.appendChild(d);
 });
 
-/* STRANDS */
+/* STRANDS (FIXED) */
 const strandWords=["SURAT","VEGAS","PRISHA","LOVE"];
-let found=[];
-let current="";
+const found=new Set();
 
 const letters="SURATVEGASPRISHALOVE".split("");
 const lg=document.getElementById("letterGrid");
+
+let selection=[];
 
 letters.forEach(l=>{
 
@@ -332,17 +345,40 @@ d.innerText=l;
 
 d.onclick=()=>{
 
-current+=l;
+if(d.classList.contains("found")) return;
 
-let match=strandWords.find(w=>w===current);
+d.classList.toggle("sel");
 
-if(match && !found.includes(match)){
-found.push(match);
-document.getElementById("sm").innerText="Found: "+match+" ❤️";
-current="";
+if(d.classList.contains("sel")){
+selection.push({el:d,letter:l});
+}else{
+selection=selection.filter(x=>x.el!==d);
 }
 
-if(current.length>8) current="";
+if(selection.length===5){
+
+const word=selection.map(x=>x.letter).join("");
+
+if(strandWords.includes(word) && !found.has(word)){
+
+found.add(word);
+
+selection.forEach(x=>{
+x.el.classList.add("found");
+x.el.classList.remove("sel");
+});
+
+document.getElementById("sm").innerText=
+"Found: "+word+" ❤️";
+
+}else{
+selection.forEach(x=>{
+x.el.classList.remove("sel");
+});
+}
+
+selection=[];
+}
 };
 
 lg.appendChild(d);
