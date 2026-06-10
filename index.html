@@ -69,7 +69,7 @@ button{
 .wrong{background:#333;}
 
 /* CONNECTIONS */
-.word{
+/*.word{
   display:inline-block;
   padding:10px 12px;
   margin:5px;
@@ -77,7 +77,23 @@ button{
   border-radius:10px;
   cursor:pointer;
 }
-.selected{background:#ff4d6d;}
+.selected{background:#ff4d6d;}*/
+.word{
+  display:inline-block;
+  padding:10px 12px;
+  margin:6px;
+  background:#222;
+  border-radius:10px;
+  cursor:pointer;
+  user-select:none;
+}
+.word.selected{
+  background:#ff4d6d;
+}
+.word.correct{
+  background:#3aa655;
+}
+
 
 /* STRANDS */
 .letters{
@@ -128,8 +144,14 @@ button{
 
 <!-- CONNECTIONS -->
 <div id="connections" class="screen">
+  <h2>Puzzle 2: Connections</h2>
+  <p>Select 4 words from the same group</p>
+
+  
+<!-- CONNECTIONS 
+<div id="connections" class="screen">
   <h2>PUZZLE 2: Connections</h2>
-  <p>Select related words (tap 4 at a time)</p>
+  <p>Select related words (tap 4 at a time)</p>-->
 
   <div id="words">
     <div class="word">SURAT</div>
@@ -242,6 +264,75 @@ letters.forEach(l=>{
 /* ---------- SONG ---------- */
 function playSong(){
   window.open("https://www.youtube.com/watch?v=sZfnwayum2M","_blank");
+}
+
+const groups = [
+  ["SURAT","VEGAS","CHICAGO","HOME"],
+  ["NIDHI","DEEPAK","PRISHA","FAMILY"],
+  ["LOVE","TRUST","LAUGHTER","SUPPORT"],
+  ["MEETING","WEDDING","FOREVER","ANNIVERSARY"]
+];
+
+let selected = [];
+let solvedGroups = 0;
+
+const words = [].concat(...groups);
+const container = document.getElementById("words");
+
+// shuffle words
+words.sort(() => Math.random() - 0.5);
+
+// render
+words.forEach(w=>{
+  let d = document.createElement("div");
+  d.className="word";
+  d.innerText=w;
+
+  d.onclick=()=>{
+    if(d.classList.contains("correct")) return;
+
+    d.classList.toggle("selected");
+
+    if(d.classList.contains("selected")){
+      selected.push(d);
+    } else {
+      selected = selected.filter(x => x !== d);
+    }
+
+    if(selected.length === 4){
+      checkGroup();
+    }
+  };
+
+  container.appendChild(d);
+});
+
+function checkGroup(){
+  let values = selected.map(x=>x.innerText);
+
+  let match = groups.find(g =>
+    g.every(v => values.includes(v))
+  );
+
+  if(match){
+    selected.forEach(x=>{
+      x.classList.remove("selected");
+      x.classList.add("correct");
+    });
+
+    document.getElementById("connMsg").innerText = "Correct ❤️ Group found!";
+    solvedGroups++;
+  } else {
+    document.getElementById("connMsg").innerText = "Try again ❤️";
+    selected.forEach(x=>x.classList.remove("selected"));
+  }
+
+  selected = [];
+
+  if(solvedGroups === 4){
+    document.getElementById("connMsg").innerText =
+      "All connections found ❤️";
+  }
 }
 
 </script>
