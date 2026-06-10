@@ -2,52 +2,37 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>14 Years of Us ❤️</title>
 
 <style>
 body{
   margin:0;
-  font-family: Arial, sans-serif;
+  font-family: Arial;
   background:#0e0e10;
   color:white;
   text-align:center;
 }
 
-/* cinematic slow transitions */
-.screen{
-  display:none;
-  padding:30px;
-  opacity:0;
-  transform:translateY(25px);
-  transition:all 1.3s ease;
-}
+.screen{display:none; padding:20px;}
+.active{display:block;}
 
-.active{
-  display:block;
-  opacity:1;
-  transform:translateY(0);
-}
-
-/* buttons */
 button{
-  padding:12px 18px;
-  margin:10px;
+  padding:12px 16px;
+  margin:8px;
   border:none;
   border-radius:10px;
   cursor:pointer;
-  font-size:15px;
 }
 
-.btn{background:#ff4d6d;color:white;}
-.btn2{background:#333;color:white;}
+.btn{background:#ff4d6d; color:white;}
+.btn2{background:#333; color:white;}
 
-/* photos */
 .photo{
-  margin:20px auto;
-  padding:30px;
+  margin:15px auto;
+  padding:20px;
   width:85%;
-  max-width:340px;
+  max-width:320px;
   background:#1f1f1f;
   border-radius:12px;
   color:#aaa;
@@ -56,20 +41,20 @@ button{
 /* WORDLE */
 .grid{
   display:grid;
-  grid-template-columns: repeat(5, 48px);
+  grid-template-columns: repeat(5, 45px);
   gap:6px;
   justify-content:center;
-  margin-top:20px;
+  margin-top:15px;
 }
 
 .tile{
-  width:48px;height:48px;
-  border:2px solid #444;
+  width:45px;height:45px;
   display:flex;
   align-items:center;
   justify-content:center;
-  font-weight:bold;
+  border:2px solid #444;
   text-transform:uppercase;
+  font-weight:bold;
   background:#111;
 }
 
@@ -80,12 +65,12 @@ button{
 /* CONNECTIONS */
 .word{
   display:inline-block;
-  padding:10px 12px;
-  margin:6px;
+  padding:10px;
+  margin:5px;
   background:#222;
   border-radius:8px;
   cursor:pointer;
-  transition:0.3s;
+  user-select:none;
 }
 
 .word.selected{background:#ff4d6d;}
@@ -94,14 +79,14 @@ button{
 /* STRANDS */
 .letters{
   display:grid;
-  grid-template-columns: repeat(6, 42px);
-  gap:6px;
+  grid-template-columns: repeat(6, 40px);
+  gap:5px;
   justify-content:center;
-  margin-top:15px;
+  margin-top:10px;
 }
 
 .letter{
-  width:42px;height:42px;
+  width:40px;height:40px;
   background:#222;
   display:flex;
   align-items:center;
@@ -110,12 +95,12 @@ button{
   cursor:pointer;
 }
 
-.letter.found{background:#3aa655;}
+.found{background:#3aa655;}
 
-/* inputs */
+/* INPUTS */
 input{
   padding:10px;
-  margin:8px;
+  margin:6px;
   border-radius:8px;
   border:none;
   text-align:center;
@@ -134,16 +119,15 @@ input{
   <div class="photo">PHOTO_01_COVER.jpg</div>
 
   <button class="btn" onclick="playSong()">▶ Play Our Song</button>
-  <button class="btn2" onclick="go('wordle')">Start Journey</button>
+  <button class="btn2" onclick="go('wordle')">Start</button>
 </div>
 
 <!-- WORDLE -->
 <div id="wordle" class="screen">
-  <h2>Puzzle 1</h2>
-  <p>Where it all began ❤️</p>
+  <h2>Puzzle 1: Where it began</h2>
 
-  <input id="winput" placeholder="5-letter word"/>
-  <button class="btn" onclick="checkWord()">Submit</button>
+  <input id="winput" placeholder="5-letter word">
+  <button class="btn" onclick="checkWord()">Guess</button>
 
   <div id="grid" class="grid"></div>
   <p id="wmsg"></p>
@@ -151,19 +135,19 @@ input{
 
 <!-- CONNECTIONS -->
 <div id="connections" class="screen">
-  <h2>Puzzle 2</h2>
-  <p>Group the memories ❤️</p>
+  <h2>Puzzle 2: Connections</h2>
+  <p>Select groups of 4 words</p>
 
   <div id="words"></div>
   <p id="cmsg"></p>
 
-  <button class="btn" onclick="go('strands')">Continue</button>
+  <button class="btn" onclick="go('strands')">Next</button>
 </div>
 
 <!-- WORD HUNT -->
 <div id="strands" class="screen">
-  <h2>Puzzle 3</h2>
-  <p>Find hidden memories ❤️</p>
+  <h2>Puzzle 3: Word Hunt</h2>
+  <p>Find: SURAT, VEGAS, PRISHA, LOVE</p>
 
   <div class="letters" id="letters"></div>
 
@@ -171,21 +155,21 @@ input{
 
   <div class="photo">PHOTO_02_FAMILY.jpg</div>
 
-  <button class="btn" onclick="go('crossword')">Continue</button>
+  <button class="btn" onclick="go('crossword')">Next</button>
 </div>
 
 <!-- CROSSWORD -->
 <div id="crossword" class="screen">
-  <h2>Puzzle 4</h2>
+  <h2>Puzzle 4: Mini Crossword</h2>
 
-  <p>City we met</p>
-  <input id="c1"/>
+  <p>1. City we met</p>
+  <input id="c1">
 
-  <p>Anniversary trip</p>
-  <input id="c2"/>
+  <p>2. Anniversary trip city</p>
+  <input id="c2">
 
-  <p>Daughter’s name</p>
-  <input id="c3"/>
+  <p>3. Our daughter</p>
+  <input id="c3">
 
   <button class="btn" onclick="checkCrossword()">Submit</button>
 
@@ -202,12 +186,11 @@ input{
 
   <div class="photo">PHOTO_04_BIGBOWL.jpg</div>
 
-  <p style="line-height:1.6;">
+  <p>
     Dear Deepak,<br><br>
-    From Surat where it all began,<br>
-    to Vegas celebrations,<br>
-    to building a life with Prisha,<br><br>
-    every year has been our story ❤️
+    From Surat to Vegas to Chicago,<br>
+    and building a beautiful life with Prisha,<br><br>
+    every moment has been our story ❤️
   </p>
 
   <div class="photo">PHOTO_05_FAMILY.jpg</div>
@@ -218,14 +201,12 @@ input{
 /* NAVIGATION */
 function go(id){
   document.querySelectorAll('.screen').forEach(s=>s.classList.remove('active'));
-  setTimeout(()=>{
-    document.getElementById(id).classList.add('active');
-  },400);
+  document.getElementById(id).classList.add('active');
 }
 
 /* SONG */
 function playSong(){
-  window.open("PASTE_SAB_TERA_LINK_HERE","_blank");
+  window.open("PASTE_SAB_TERA_YOUTUBE_LINK_HERE","_blank");
 }
 
 /* WORDLE */
@@ -234,6 +215,7 @@ const answer="SURAT";
 function checkWord(){
   let val=document.getElementById("winput").value.toUpperCase();
   let grid=document.getElementById("grid");
+  let msg=document.getElementById("wmsg");
 
   grid.innerHTML="";
 
@@ -250,10 +232,10 @@ function checkWord(){
   }
 
   if(val===answer){
-    document.getElementById("wmsg").innerText="Correct ❤️";
-    setTimeout(()=>go('connections'),1500);
+    msg.innerText="Correct ❤️";
+    setTimeout(()=>go('connections'),1200);
   } else {
-    document.getElementById("wmsg").innerText="Try again ❤️";
+    msg.innerText="Try again ❤️";
   }
 }
 
@@ -277,12 +259,19 @@ words.forEach(w=>{
   d.innerText=w;
 
   d.onclick=()=>{
+    if(d.classList.contains("correct")) return;
+
     d.classList.toggle("selected");
 
-    if(d.classList.contains("selected")) selected.push(d);
-    else selected=selected.filter(x=>x!==d);
+    if(d.classList.contains("selected")){
+      selected.push(d);
+    } else {
+      selected=selected.filter(x=>x!==d);
+    }
 
-    if(selected.length===4) checkGroup();
+    if(selected.length===4){
+      checkGroup();
+    }
   };
 
   container.appendChild(d);
@@ -294,7 +283,10 @@ function checkGroup(){
   let match=groups.find(g=>g.every(v=>vals.includes(v)));
 
   if(match){
-    selected.forEach(x=>x.classList.add("correct"));
+    selected.forEach(x=>{
+      x.classList.remove("selected");
+      x.classList.add("correct");
+    });
     solved++;
   } else {
     selected.forEach(x=>x.classList.remove("selected"));
@@ -303,15 +295,16 @@ function checkGroup(){
   selected=[];
 
   if(solved===4){
-    document.getElementById("cmsg").innerText="All memories connected ❤️";
+    document.getElementById("cmsg").innerText="All connections solved ❤️";
   }
 }
 
 /* WORD HUNT */
-const target=["SURAT","VEGAS","PRISHA","LOVE"];
+const targetWords=["SURAT","VEGAS","PRISHA","LOVE"];
+let found=[];
 let current="";
-let letters="SURATVEGASPRISHALOVE".split("");
 
+let letters="SURATVEGASPRISHALOVE".split("");
 let box=document.getElementById("letters");
 
 letters.forEach(l=>{
@@ -322,7 +315,8 @@ letters.forEach(l=>{
   d.onclick=()=>{
     current+=l;
 
-    if(target.includes(current)){
+    if(targetWords.includes(current)){
+      found.push(current);
       document.getElementById("smsg").innerText="Found: "+current+" ❤️";
       current="";
     }
