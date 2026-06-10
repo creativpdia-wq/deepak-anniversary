@@ -24,32 +24,20 @@ body{
   justify-content:center;
   opacity:0;
   pointer-events:none;
-  transition:opacity 1.2s ease;
+  transition:opacity 1s ease;
   padding:20px;
   text-align:center;
 }
-
 .screen.active{
   opacity:1;
   pointer-events:auto;
 }
 
-/* BACKGROUND GLOW */
 .bg{
   position:absolute;
   inset:0;
-  background:radial-gradient(circle at center,#1a1a1a,#000);
+  background:radial-gradient(circle,#1a1a1a,#000);
   z-index:-1;
-}
-
-/* TEXT */
-h1,h2,p{
-  animation:fade 1.2s ease;
-}
-
-@keyframes fade{
-  from{opacity:0; transform:translateY(10px);}
-  to{opacity:1; transform:translateY(0);}
 }
 
 /* BUTTON */
@@ -63,18 +51,26 @@ button{
   cursor:pointer;
 }
 
+/* IMAGES */
+img{
+  width:260px;
+  border-radius:12px;
+  margin:10px;
+}
+
 /* WORDLE */
 .tile{
-  width:45px;height:45px;
+  width:40px;height:40px;
   border:2px solid #444;
   display:inline-flex;
   align-items:center;
   justify-content:center;
   margin:3px;
   font-weight:bold;
+  text-transform:uppercase;
 }
-.correct{background:#538d4e;}
-.present{background:#b59f3b;}
+.correct{background:#4caf50;}
+.present{background:#c9b458;}
 .absent{background:#333;}
 
 /* CONNECTIONS */
@@ -92,26 +88,26 @@ button{
 /* STRANDS */
 #board{
   display:grid;
-  grid-template-columns:repeat(6,45px);
-  gap:6px;
+  grid-template-columns:repeat(6,40px);
+  gap:5px;
   margin-top:20px;
 }
 .cell{
-  width:45px;height:45px;
+  width:40px;height:40px;
   background:#222;
   display:flex;
   align-items:center;
   justify-content:center;
-  border-radius:8px;
-  cursor:pointer;
+  border-radius:6px;
   user-select:none;
+  cursor:pointer;
 }
 .active{background:#555;}
 .found{background:#4caf50;}
 
 /* FINAL */
 .glow{
-  text-shadow:0 0 12px #ff4d6d;
+  text-shadow:0 0 10px #ff4d6d;
 }
 </style>
 </head>
@@ -119,23 +115,28 @@ button{
 <body>
 
 <audio id="music" loop>
-  <source src="sab-tera.mp3">
+  <source src="https://www.youtube.com/watch?v=sZfnwayum2M">
 </audio>
 
 <!-- INTRO -->
 <div id="intro" class="screen active">
   <div class="bg"></div>
+
   <h1 class="glow">Our Story ❤️</h1>
   <p>14 Years • One Journey • Forever</p>
+
+  <img src="photo1.jpg">
+
   <button onclick="start()">Begin</button>
 </div>
 
 <!-- WORDLE -->
 <div id="wordle" class="screen">
   <div class="bg"></div>
-  <h2>Chapter 1: Beginning</h2>
 
-  <input id="w" maxlength="5" placeholder="Guess">
+  <h2>Chapter 1: Wordle</h2>
+
+  <input id="w" maxlength="5">
   <button onclick="checkWordle()">Submit</button>
 
   <div id="wboard"></div>
@@ -145,41 +146,37 @@ button{
 <!-- CONNECTIONS -->
 <div id="conn" class="screen">
   <div class="bg"></div>
-  <h2>Chapter 2: Memories</h2>
 
+  <h2>Chapter 2: Connections</h2>
   <div id="cgrid"></div>
 
-  <button onclick="go('strands')">Continue</button>
+  <button onclick="go('strands')">Next</button>
 </div>
 
 <!-- STRANDS -->
 <div id="strands" class="screen">
   <div class="bg"></div>
-  <h2>Chapter 3: Hidden Words</h2>
-  <p>Connect letters to form memories</p>
+
+  <h2>Chapter 3: Strands</h2>
+  <p>Drag letters to form words</p>
 
   <div id="board"></div>
   <p id="smsg"></p>
 
-  <button onclick="go('cross')">Continue</button>
+  <button onclick="go('cross')">Next</button>
 </div>
 
 <!-- CROSSWORD -->
 <div id="cross" class="screen">
   <div class="bg"></div>
-  <h2>Chapter 4: Final Clues</h2>
 
-  <p>City we met</p>
-  <input id="c1">
+  <h2>Chapter 4: Crossword</h2>
 
-  <p>Trip city</p>
-  <input id="c2">
+  <input id="c1" placeholder="City we met"><br>
+  <input id="c2" placeholder="Trip city"><br>
+  <input id="c3" placeholder="Daughter"><br>
 
-  <p>Daughter</p>
-  <input id="c3">
-
-  <button onclick="checkCross()">Finish Story</button>
-
+  <button onclick="checkCross()">Finish</button>
   <p id="cmsg"></p>
 </div>
 
@@ -189,8 +186,10 @@ button{
 
   <h1 class="glow">Forever ❤️</h1>
 
-  <p>Surat → Vegas → Chicago → Prisha → Us</p>
-  <h2>Happy Anniversary</h2>
+  <img src="photo2.jpg">
+  <img src="photo3.jpg">
+
+  <p>Surat → Vegas → Chicago → Prisha → Us ❤️</p>
 </div>
 
 <script>
@@ -206,9 +205,7 @@ function start(){
   show("wordle");
 }
 
-function go(id){
-  show(id);
-}
+function go(id){ show(id); }
 
 /* WORDLE */
 const answer="APRIL";
@@ -270,10 +267,7 @@ groups.flat().sort(()=>Math.random()-0.5).forEach(w=>{
           x.classList.add("done");
           x.classList.remove("sel");
         });
-      } else {
-        sel.forEach(x=>x.classList.remove("sel"));
       }
-
       sel=[];
     }
   };
@@ -281,7 +275,7 @@ groups.flat().sort(()=>Math.random()-0.5).forEach(w=>{
   cgrid.appendChild(d);
 });
 
-/* STRANDS (SAFE CINEMATIC VERSION) */
+/* STRANDS */
 const strandWords=["SURAT","VEGAS","PRISHA","LOVE"];
 const letters="SURATVEGASPRISHALOVE".split("");
 
@@ -307,7 +301,7 @@ document.onmouseup=()=>{
 
   if(strandWords.includes(word)){
     path.forEach(x=>x.classList.add("found"));
-    document.getElementById("smsg").innerText="Found: "+word+" ❤️";
+    document.getElementById("smsg").innerText="Found: "+word;
   } else {
     path.forEach(x=>x.classList.remove("active"));
   }
@@ -329,7 +323,7 @@ function checkCross(){
 
   if(a==="SURAT" && b==="VEGAS" && c==="PRISHA"){
     document.getElementById("cmsg").innerText="Perfect ❤️";
-    setTimeout(()=>show("final"),1500);
+    setTimeout(()=>show("final"),1200);
   } else {
     document.getElementById("cmsg").innerText="Try again ❤️";
   }
