@@ -152,10 +152,8 @@ img{
   <div class="bg"></div>
   <h2>Chapter 2: Connections</h2>
   <div id="cgrid"></div>
-  <!--<button onclick="go('strands')">Next</button>-->
-  <button id="connNext" style="display:none" onclick="go('strands')">
-  Next
-</button>
+ <button onclick="go('strands')">Next</button>
+
 </div>
 
 <!-- STRANDS -->
@@ -188,15 +186,74 @@ img{
   <p id="cmsg"></p>
 </div>
 
-<!-- FINAL -->
+<!-- FINAL 
 <div id="final" class="screen">
   <div class="bg"></div>
 
   <h1 class="glow">Forever ❤️</h1>
   <img src="photo2.jpg">
   <p>Surat → Vegas → Chicago → Prisha → Us</p>
-</div>
+</div>-->
+<!-- added new -->
+<!-- FINAL -->
+<div id="final" class="screen">
+  <div class="bg"></div>
 
+  <h1 class="glow">Forever ❤️</h1>
+
+  <img src="photo2.jpg">
+
+  <p>Surat → Vegas → Chicago → Prisha → Us</p>
+
+  <p style="max-width:650px;margin-top:20px;">
+    Fourteen years together. From the day we met in Surat,
+    to our adventures in Vegas and Chicago, to building a
+    beautiful family with Prisha, every chapter has been my favorite
+    because I got to share it with you.
+  </p>
+
+  <button onclick="revealGift()">
+    Open Your Anniversary Gift 🎁
+  </button>
+
+  <div id="giftSection"
+       style="display:none;margin-top:25px;max-width:700px;">
+
+    <h2 class="glow">Happy Anniversary ❤️</h2>
+
+    <p>
+      Through all the years, road trips, flights, moves,
+      and everyday adventures, there has always been one thing
+      we can count on:
+    </p>
+
+    <p>
+      We always find our way back to each other.
+    </p>
+
+    <p>
+      So I wanted to give you something that helps keep track
+      of the things that matter most in daily life too.
+    </p>
+
+    <h1 style="font-size:60px;">🎁</h1>
+
+    <h2>Your Gift:</h2>
+
+    <h1 class="glow">Tile Tracking Pack</h1>
+
+    <p>
+      For your keys, wallet, bags, and all those things that
+      somehow decide to disappear exactly when we're in a hurry.
+    </p>
+
+    <p style="margin-top:20px;font-style:italic;">
+      Here's to many more adventures, memories,
+      and never losing our way. ❤️
+    </p>
+  </div>
+</div> 
+<!-- added new -->
 <script>
 
 /* NAV */
@@ -347,6 +404,55 @@ function checkCross(){
     document.getElementById("cmsg").innerText="Try again ❤️";
   }
 }
+
+/*added*/
+function revealGift(){
+
+  document.getElementById("giftSection").style.display="block";
+
+  for(let i=0;i<60;i++){
+
+    setTimeout(()=>{
+
+      const heart=document.createElement("div");
+
+      heart.innerHTML="❤️";
+
+      heart.style.position="fixed";
+      heart.style.left=Math.random()*100+"vw";
+      heart.style.top="100vh";
+      heart.style.fontSize=(20 + Math.random()*25) + "px";
+      heart.style.pointerEvents="none";
+      heart.style.zIndex="9999";
+
+      document.body.appendChild(heart);
+
+      heart.animate(
+        [
+          {
+            transform:"translateY(0)",
+            opacity:1
+          },
+          {
+            transform:"translateY(-120vh)",
+            opacity:0
+          }
+        ],
+        {
+          duration:5000,
+          easing:"linear"
+        }
+      );
+
+      setTimeout(()=>{
+        heart.remove();
+      },5000);
+
+    }, i*80);
+
+  }
+}
+/*added*/
 
 </script>
 
